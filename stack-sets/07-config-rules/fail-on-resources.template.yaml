@@ -12,6 +12,9 @@ Resources:
         - Action: config:PutEvaluations
           Resource: '*'
           Effect: Allow
+        - Action: kms:DescribeKey
+          Resource: '*'
+          Effect: Allow
 
   FailAllResourcesConfigRule:
     DependsOn: FailAllResourcesComplianceLambdaInvokePermission

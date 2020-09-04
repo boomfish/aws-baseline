@@ -1,0 +1,4 @@
+stack: stack-set-admin-role
+capabilities:
+  - CAPABILITY_NAMED_IAM
+create-missing: true

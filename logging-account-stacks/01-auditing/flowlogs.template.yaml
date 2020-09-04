@@ -8,7 +8,7 @@ Resources:
     DeletionPolicy: Delete
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !Sub ${AWS::StackName}-${FlowLogsBucketPrefix}-${AWS::AccountId}
+      BucketName: !Sub ${AWS::StackName}-${FlowLogsBucketPrefix}-{{MainAccount}}
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -50,3 +50,9 @@ Resources:
             Action: s3:GetBucketAcl
             Resource:
             - !GetAtt FlowLogsBucket.Arn
+
+Outputs:
+  FlowLogsBucketName:
+    Value: !Ref FlowLogsBucket
+    Export:
+      Name: !Sub ${ExportPrefix}:FlowLogsBucketName

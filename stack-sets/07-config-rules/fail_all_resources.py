@@ -3,6 +3,7 @@ import json
 import os
 
 config = boto3.client('config')
+kms = boto3.client('kms')
 
 CLOUDFORMATION_TYPE = 'AWS::CloudFormation::Stack'
 
@@ -20,10 +21,16 @@ def handler(event, context):
     if (
             (context.function_name == resource_id and resource_type == 'AWS::Lambda::Function') or
             (os.environ['StackName'] in resource_id and resource_type == CLOUDFORMATION_TYPE) or
-            ('StackSet-' in resource_id and resource_type == CLOUDFORMATION_TYPE)
+            ('StackSet-' in resource_id and resource_type == CLOUDFORMATION_TYPE) or
+            (resource_type == 'AWS::RDS::DBSecurityGroup' and resource_id == 'default')
     ):
         compliance_type = 'COMPLIANT'
         annotation = 'Compliant'
+    elif resource_type == 'AWS::KMS::Key':
+        kms_key_details = kms.describe_key(KeyId=resource_id)
+        if kms_key_details['KeyMetadata']['KeyManager'] == 'AWS':
+            compliance_type = 'COMPLIANT'
+            annotation = 'Compliant'
 
     print('ComplianceStatus: ' + compliance_type)
     config.put_evaluations(

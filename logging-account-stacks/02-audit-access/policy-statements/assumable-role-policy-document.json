@@ -1,0 +1,22 @@
+{
+  "Statement": {
+    "Effect": "Allow",
+    "Principal": {
+      "AWS": "{{SecurityAccount}}"
+    },
+    "Action": "sts:AssumeRole",
+    "Condition": {
+      "Fn::If": [
+        "HasMFAEnabled",
+        {
+          "Bool": {
+            "aws:MultiFactorAuthPresent": true
+          }
+        },
+        {
+          "Ref": "AWS::NoValue"
+        }
+      ]
+    }
+  }
+}

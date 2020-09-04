@@ -14,3 +14,13 @@ Resources:
       DatabaseInput:
         Name: !Ref AuditingGlueDatabaseName
       CatalogId: !Ref AWS::AccountId
+
+Outputs:
+  AthenaQueryResultsBucketName:
+    Value: !Ref AthenaQueryResults
+    Export:
+      Name: !Sub ${ExportPrefix}:AthenaQueryResultsBucketName
+  AuditingGlueDatabaseName:
+    Value: !Ref AuditingGlueDatabase
+    Export:
+      Name: !Sub ${ExportPrefix}:AuditingGlueDatabaseName

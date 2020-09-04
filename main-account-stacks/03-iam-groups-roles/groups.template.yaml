@@ -1,0 +1,179 @@
+Parameters:
+  RequireMFAOnAdminActions:
+    Type: String
+    Default: true
+    AllowedValues: ['true', 'false']
+
+Conditions:
+  RequireMFAOnAdminActions: !Equals [!Ref RequireMFAOnAdminActions, 'true']
+
+Resources:
+
+{% if MainAccount != SecurityAccount %}
+
+  AdminGroup:
+    Properties:
+      GroupName: OrganizationAdminGroup
+      Path: /admin/
+      Policies:
+        - PolicyDocument:
+            Statement:
+              - Fn::If:
+                - RequireMFAOnAdminActions
+                - Action:
+                    - '*'
+                  Effect: Allow
+                  Resource: '*'
+                  Condition:
+                    Bool:
+                      aws:MultiFactorAuthPresent: 'true'
+                - Action:
+                    - '*'
+                  Effect: Allow
+                  Resource: '*'
+          PolicyName: AdminPolicy
+    Type: AWS::IAM::Group
+
+  SecurityAudit:
+    Properties:
+      GroupName: SecurityAudit
+      Path: /security/
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/SecurityAudit
+      Policies:
+        - PolicyName: SecurityAudit
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Action:
+                  - support:DescribeTrustedAdvisorChecks
+                  - sns:ListSubscriptions
+                Effect: Allow
+                Resource: "*"
+        - PolicyName: AssumeSecurityAuditRole
+          PolicyDocument:
+            Statement:
+              - Action:
+                  - sts:AssumeRole
+                Effect: Allow
+                Resource:
+                  - arn:aws:iam::*:role/OrganizationSecurityAuditRole
+    Type: AWS::IAM::Group
+
+  UserCredentialsManagement:
+    Properties:
+      GroupName: UserCredentialsManagement
+      Path: /admin/
+      Policies:
+        - PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: iam:GetAccountPasswordPolicy
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - iam:GetLoginProfile
+                  - iam:UpdateLoginProfile
+                  - iam:ChangePassword
+                Resource: arn:aws:iam::*:user/${aws:username}
+              - Sid: AllowListActions
+                Effect: Allow
+                Action:
+                  - iam:ListUsers
+                  - iam:ListVirtualMFADevices
+                Resource: "*"
+              - Sid: AllowIndividualUserToListOnlyTheirOwnMFA
+                Effect: Allow
+                Action:
+                  - iam:ListMFADevices
+                Resource:
+                  - arn:aws:iam::*:mfa/*
+                  - arn:aws:iam::*:user/${aws:username}
+              - Sid: AllowIndividualUserToManageTheirOwnMFA
+                Effect: Allow
+                Action:
+                  - iam:CreateVirtualMFADevice
+                  - iam:DeleteVirtualMFADevice
+                  - iam:EnableMFADevice
+                  - iam:ResyncMFADevice
+                Resource:
+                  - arn:aws:iam::*:mfa/${aws:username}
+                  - arn:aws:iam::*:user/${aws:username}
+              - Sid: AllowIndividualUserToDeactivateOnlyTheirOwnMFAOnlyWhenUsingMFA
+                Effect: Allow
+                Action:
+                  - iam:DeactivateMFADevice
+                Resource:
+                  - arn:aws:iam::*:mfa/${aws:username}
+                  - arn:aws:iam::*:user/${aws:username}
+                Condition:
+                  Bool:
+                    aws:MultiFactorAuthPresent: 'true'
+              - Sid: ManageAccessKeys
+                Effect: Allow
+                Action:
+                  - iam:ListAccessKeys
+                  - iam:CreateAccessKey
+                  - iam:DeleteAccessKey
+                Resource:
+                  - arn:aws:iam::*:user/${aws:username}
+              - Fn::If:
+                  - RequireMFAOnAdminActions
+                  - Sid: BlockMostAccessUnlessSignedInWithMFA
+                    Effect: Deny
+                    NotAction:
+                      - iam:CreateVirtualMFADevice
+                      - iam:EnableMFADevice
+                      - iam:ListMFADevices
+                      - iam:ListUsers
+                      - iam:ListVirtualMFADevices
+                      - iam:ResyncMFADevice
+                      - sts:AssumeRole
+                      - organizations:ListAccounts
+                      - iam:ListAccountAliases
+                      - ce:GetCostAndUsage
+                    Resource: "*"
+                    Condition:
+                      BoolIfExists:
+                        aws:MultiFactorAuthPresent: 'false'
+                  - !Ref AWS::NoValue
+          PolicyName: UserCredentialManagement
+    Type: AWS::IAM::Group
+
+  AccountListing:
+    Properties:
+      GroupName: ListAccounts
+      Path: /admin/
+      Policies:
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - organizations:ListAccounts
+                  - iam:ListAccountAliases
+                Effect: Allow
+                Resource: '*'
+          PolicyName: AccountListing
+    Type: AWS::IAM::Group
+
+  BillingReadAccess:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: BillingReadAccess
+      Path: /admin/
+      Policies:
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - aws-portal:View*
+                  - awsbillingconsole:View*
+                  - budgets:ViewBudget
+                  - ce:*
+                  - cur:*
+                  - pricing:Describe*
+                  - pricing:Get*
+                Effect: Allow
+                Resource: '*'
+          PolicyName: BillingReadAccess
+
+{% endif %}

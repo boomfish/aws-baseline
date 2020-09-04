@@ -2,9 +2,7 @@
   "Statement": {
     "Effect": "Allow",
     "Principal": {
-      "AWS": {
-        "Ref": "MainAccount"
-      }
+      "AWS": "arn:aws:iam::{{SecurityAccount}}:root"
     },
     "Action": "sts:AssumeRole",
     "Condition": {

@@ -8,6 +8,7 @@ Following a short summary for each StackSet. For individual documentation on eac
 
 * `01-stack-set-execution-role`: Role that allows Cloudformation to deploy StackSets.
 * `02-assumable-roles`: Various Roles (Admin, Developer, Operations, ...) to assume from the main account.
+* `02a-org-security-audit-role`: Role for running Prowler scans from the main account instead of the security account (for split management setups only)
 * `03-password-policy`: Password Policy deployed into every Account
 * `04-guardduty-main`: GuardDuty deployed to main account to invite SubAccounts
 * `05-guardduty-member`: Guardduty deployed to member accounts accepting the invitation

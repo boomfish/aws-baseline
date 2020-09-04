@@ -15,7 +15,7 @@ All Roles created in sub-accounts are configured with a Permissions Boundary to 
 
 One important Boundary that is set up is for roles created by developers in the sub-accounts. Any Role or user that gets created through a Baseline Role needs to have a Permissions Boundary set to a specific Boundary. This ensures that no rights escalation is possible, for example consider the following:
 
-1. Attacker gets acces to sub-account credentials that are able to create new Roles or Users
+1. Attacker gets access to sub-account credentials that are able to create new Roles or Users
 2. She creates a new Role and sets the Permissions to Admin access
 3. She switches into that new Role and has now escalated rights from the DeveloperRole she had, for example she can now work around the region limitation set up before.
 

@@ -1,0 +1,24 @@
+Parameters:
+  ExportPrefix:
+    Type: String
+    Default: 'audit-storage'
+
+Resources:
+  LoggingBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-logging-{{MainAccount}}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      AccessControl: LogDeliveryWrite
+      LoggingConfiguration:
+        LogFilePrefix: logging
+
+Outputs:
+  LoggingBucketName:
+    Value: !Ref LoggingBucket
+    Export:
+      Name: !Sub ${ExportPrefix}:LoggingBucketName
+        

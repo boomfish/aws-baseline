@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Based on https://gist.github.com/jokeru/e4a25bbd95080cfd00edf1fa67b06996
 
-echo "Deleting Default VPCs in all Accounts"
+echo "Deleting Default VPCs in all Regions"
 
 for region in $(aws ec2 describe-regions --query Regions[].RegionName --output text); do
 

@@ -1,0 +1,30 @@
+Parameters:
+  MaxSessionDuration:
+    Type: Number
+    Default: 28800
+    Description: Maximum Duration you can set when assuming a role.
+
+Resources:
+  OrganizationSecurityAuditRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !Sub arn:aws:iam::${MainAccount}:root
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/SecurityAudit
+      Policies:
+        - PolicyName: SecurityAudit
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Action:
+                  - support:DescribeTrustedAdvisorChecks
+                  - sns:ListSubscriptions
+                Effect: Allow
+                Resource: "*"
+      RoleName: OrganizationSecurityAuditRole
+    Type: AWS::IAM::Role

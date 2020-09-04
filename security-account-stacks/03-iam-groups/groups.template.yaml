@@ -164,6 +164,7 @@ Resources:
           PolicyName: AccountListing
     Type: AWS::IAM::Group
 
+{% if MainAccount == SecurityAccount %}
   BillingReadAccess:
     Type: AWS::IAM::Group
     Properties:
@@ -183,3 +184,15 @@ Resources:
                 Effect: Allow
                 Resource: '*'
           PolicyName: BillingReadAccess
+{% endif %}
+
+{% if LoggingAccount == SecurityAccount %}
+  LoggingReadAccess:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: LoggingReadAccess
+      Path: /admin/
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/admin/AuditBucketsReadAccess
+        - arn:aws:iam::aws:policy/service-role/AWSQuicksightAthenaAccess
+{% endif %}

@@ -25,6 +25,12 @@ Conditions:
   IsLocalConfigRegion: !Not [ !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion] ]
   IsMainAccount: !Equals [!Ref 'AWS::AccountId', !Ref MainAccount]
   IsSubAccount: !Not [!Equals [!Ref 'AWS::AccountId', !Ref MainAccount]]
+  IsSecurityAccount: !Equals [!Ref 'AWS::AccountId', '{{SecurityAccount}}']
+  IsNotSecurityAccount: !Not [!Equals [!Ref 'AWS::AccountId', '{{SecurityAccount}}']]
+  IsSecurityAccountGlobalRegion:
+    Fn::And:
+      - !Equals [!Ref 'AWS::AccountId', '{{SecurityAccount}}']
+      - !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion]
 
 Resources:
   {% for Rule, Resource in EnabledConfigRules.items() %}
@@ -60,18 +66,18 @@ Resources:
   {% endfor %}
 
   GuardDutyEnabledAndCentralized:
-    Condition: IsSubAccount
+    Condition: IsNotSecurityAccount
     Type: AWS::Config::ConfigRule
     Properties:
       ConfigRuleName: "GUARDDUTY_ENABLED_CENTRALIZED"
       InputParameters:
-        CentralMonitoringAccount: !Ref MainAccount
+        CentralMonitoringAccount: "{{SecurityAccount}}"
       Source:
         Owner: AWS
         SourceIdentifier: "GUARDDUTY_ENABLED_CENTRALIZED"
 
   GuardDutyMainAccountEnabled:
-    Condition: IsMainAccount
+    Condition: IsSecurityAccount
     Type: AWS::Config::ConfigRule
     Properties:
       ConfigRuleName: "GUARDDUTY_ENABLED_CENTRALIZED"
@@ -93,7 +99,7 @@ Resources:
         SourceIdentifier: "MULTI_REGION_CLOUD_TRAIL_ENABLED"
 
   IAMUserGroupMembership:
-    Condition: IsGlobalMainAccountRegion
+    Condition: IsSecurityAccountGlobalRegion
     Type: AWS::Config::ConfigRule
     Properties:
       ConfigRuleName: IAM_USER_GROUP_MEMBERSHIP_CHECK

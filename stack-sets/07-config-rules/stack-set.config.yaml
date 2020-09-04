@@ -6,7 +6,6 @@ excluded-regions:
 main-account-parameter: true
 max-concurrent-percentage: 100
 organization-variables: true
-region: us-east-1
 vars:
   EnabledRegions:
     - us-east-1
@@ -22,6 +21,5 @@ capabilities:
   - CAPABILITY_IAM
 tags:
   ValidateAllAccounts: true
-  ValidateAllRegions: true
-parameters:
-  GlobalConfigRegion: us-east-1
+#  ValidateAllRegions: true
+  ValidateExcludedRegions: eu-north-1

@@ -1,0 +1,11 @@
+stack: iam-groups
+capabilities:
+  - CAPABILITY_NAMED_IAM
+organization-variables: true
+#vars:
+#  AWSSubAccounts:
+#    - Name: Subaccount1
+#      Id: 123456789012
+#    - Name: Subaccount2
+#      Id: 234567890123
+create-missing: true

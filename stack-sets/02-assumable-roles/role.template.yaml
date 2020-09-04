@@ -51,8 +51,6 @@ Resources:
     Properties:
       MaxSessionDuration: !Ref MaxSessionDuration
       AssumeRolePolicyDocument: {% include 'policy-statements/assumable-role-policy-document.json'%}
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/ReadOnlyAccess
       PermissionsBoundary: !Ref DeveloperPermissionsBoundary
       Policies:
         - PolicyName: CloudFormation

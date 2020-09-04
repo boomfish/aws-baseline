@@ -7,7 +7,7 @@ Resources:
     DeletionPolicy: Delete
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !Sub ${AWS::StackName}-${ConfigBucketPrefix}-${AWS::AccountId}
+      BucketName: !Sub ${AWS::StackName}-${ConfigBucketPrefix}-{{MainAccount}}
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -33,30 +33,16 @@ Resources:
             Effect: Allow
             Principal:
               Service:
-               - config.amazonaws.com
+                - config.amazonaws.com
             Action: s3:PutObject
             Resource: !Sub ${ConfigBucket.Arn}/*
             Condition:
               StringEquals:
                 s3:x-amz-acl: bucket-owner-full-control
 
-
-  ConfigConfigurationAggregator:
-    Type: "AWS::Config::ConfigurationAggregator"
-    Properties:
-      OrganizationAggregationSource:
-        RoleArn: !GetAtt ConfigAggregationRole.Arn
-        AllAwsRegions: true
-      ConfigurationAggregatorName: BaselineConfigOrganizationAggregator
-
-  ConfigAggregationRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-          Effect: Allow
-          Principal:
-            Service: config.amazonaws.com
-          Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSConfigRoleForOrganizations
+Outputs:
+  ConfigBucketName:
+    Value: !Ref ConfigBucket
+    Export:
+      Name: !Sub ${ExportPrefix}:ConfigBucketName
+                

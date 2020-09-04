@@ -1,0 +1,66 @@
+Parameters:
+  MFA:
+    Type: String
+    Default: true
+    AllowedValues: [true, false]
+    Description: Require MFA when assuming into the billing acccess role.
+  MaxSessionDuration:
+    Type: Number
+    Default: 28800
+    Description: Maximum Duration you can set when assuming the role.
+  ExportPrefix:
+    Type: String
+    Default: assumable-roles
+
+Conditions:
+  HasMFAEnabled: !Equals [true, !Ref MFA]
+
+Resources:
+
+  BillingReadAccessPolicy:
+    Properties:
+      ManagedPolicyName: BillingReadAccess
+      Path: /admin/
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - 'aws-portal:View*'
+              - 'awsbillingconsole:View*'
+              - budgets:ViewBudget
+              - 'ce:*'
+              - 'cur:*'
+              - 'pricing:Describe*'
+              - 'pricing:Get*'
+            Effect: Allow
+            Resource: '*'
+    Type: AWS::IAM::ManagedPolicy
+
+{% if SecurityAccount == MainAccount %}
+
+  BillingReadAccess:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: BillingReadAccess
+      Path: /admin/
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/admin/BillingReadAccess
+
+{% else %}
+
+  AssumableBillingViewRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument: {% include 'policy-statements/assumable-role-policy-document.json'%}
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/admin/BillingReadAccess
+      RoleName: AssumableBillingViewRole
+    Type: AWS::IAM::Role
+
+Outputs:
+  AssumableBillingViewRoleArn:
+    Value: !GetAtt AssumableBillingViewRole.Arn
+    Export:
+      Name: !Sub ${ExportPrefix}:AssumableBillingViewRoleArn
+
+{% endif %}

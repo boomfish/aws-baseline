@@ -1,6 +1,0 @@
-stack: iam-groups
-capabilities:
-  - CAPABILITY_NAMED_IAM
-organization-variables: true
-create-missing: true
-region: us-east-1

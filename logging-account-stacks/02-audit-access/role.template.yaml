@@ -1,0 +1,116 @@
+Parameters:
+  MFA:
+    Type: String
+    Default: true
+    AllowedValues: [true, false]
+    Description: Require MFA when assuming into the audit acccess role.
+  MaxSessionDuration:
+    Type: Number
+    Default: 28800
+    Description: Maximum Duration you can set when assuming the role.
+  ImportPrefix:
+    Type: String
+    Default: audit-storage
+  ExportPrefix:
+    Type: String
+    Default: assumable-roles
+
+Conditions:
+  HasMFAEnabled: !Equals [true, !Ref MFA]
+
+Resources:
+
+  AuditBucketsReadAccessPolicy:
+    Properties:
+      ManagedPolicyName: AuditBucketsReadAccess
+      Path: /admin/
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: ListAccountBuckets
+            Action:
+              - s3:ListAllMyBuckets
+            Effect: Allow
+            Resource: '*'
+          - Sid: ListAuditBucketObjects
+            Action:
+              - s3:ListBucket
+            Effect: Allow
+            Resource:
+              - !Sub
+                - arn:aws:s3:::${loggingBucketName}
+                - loggingBucketName:
+                    Fn::ImportValue:
+                      !Sub "${ImportPrefix}:LoggingBucketName"
+              - !Sub
+                - arn:aws:s3:::${flowlogsBucketName}
+                - flowlogsBucketName:
+                    Fn::ImportValue:
+                      !Sub "${ImportPrefix}:FlowLogsBucketName"
+              - !Sub
+                - arn:aws:s3:::${configBucketName}
+                - configBucketName:
+                    Fn::ImportValue:
+                      !Sub "${ImportPrefix}:ConfigBucketName"
+              - !Sub
+                - arn:aws:s3:::${cloudtrailBucketName}
+                - cloudtrailBucketName:
+                    Fn::ImportValue:
+                      !Sub "${ImportPrefix}:CloudTrailBucketName"
+          - Sid: ReadAuditBucketObjects
+            Action:
+              - s3:GetObject
+            Effect: Allow
+            Resource:
+              - !Sub
+                - arn:aws:s3:::${loggingBucketName}/*
+                - loggingBucketName:
+                    Fn::ImportValue:
+                      !Sub "${ImportPrefix}:LoggingBucketName"
+              - !Sub
+                - arn:aws:s3:::${flowlogsBucketName}/*
+                - flowlogsBucketName:
+                    Fn::ImportValue:
+                      !Sub "${ImportPrefix}:FlowLogsBucketName"
+              - !Sub
+                - arn:aws:s3:::${configBucketName}/*
+                - configBucketName:
+                    Fn::ImportValue:
+                      !Sub "${ImportPrefix}:ConfigBucketName"
+              - !Sub
+                - arn:aws:s3:::${cloudtrailBucketName}/*
+                - cloudtrailBucketName:
+                    Fn::ImportValue:
+                      !Sub "${ImportPrefix}:CloudTrailBucketName"
+    Type: AWS::IAM::ManagedPolicy
+
+{% if SecurityAccount != LoggingAccount %}
+
+  AssumableAuditRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument: {% include 'policy-statements/assumable-role-policy-document.json'%}
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/admin/AuditBucketsReadAccess
+        - arn:aws:iam::aws:policy/service-role/AWSQuicksightAthenaAccess
+      Policies:
+        - PolicyName: SecurityAudit
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Action:
+                  - support:DescribeTrustedAdvisorChecks
+                  - sns:ListSubscriptions
+                Effect: Allow
+                Resource: "*"
+      RoleName: AssumableAuditRole
+    Type: AWS::IAM::Role
+
+
+Outputs:
+  AssumableAuditRoleArn:
+    Value: !GetAtt AssumableAuditRole.Arn
+    Export:
+      Name: !Sub ${ExportPrefix}:AssumableAuditRoleArn
+
+{% endif %}

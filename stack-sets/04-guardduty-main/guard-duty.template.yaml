@@ -4,13 +4,15 @@ Resources:
     Properties:
       Enable: true
 
-  {% for Account in AWSSubAccounts %}
+  {% set previousAccountId = 0 %}
+  {% for Account in AWSAccounts %}
+  {% if Account['Id'] != SecurityAccount %}
   GuardDutyMember{{Account['Id']}}:
     DependsOn:
       - GuardDutyDetector
-      {% if loop.index > 1 %}
-      - GuardDutyMember{{AWSSubAccounts[loop.index-2]['Id']}}
-      {% endif%}
+      {% if previousAccountId > 0 %}
+      - GuardDutyMember{{previousAccountId}}
+      {% endif %}
     Type: "AWS::GuardDuty::Member"
     Properties:
       Status: "Invited"
@@ -19,4 +21,6 @@ Resources:
       Message: "You are invited to enable Amazon Guardduty."
       DetectorId: !Ref GuardDutyDetector
       DisableEmailNotification: true
+  {% set previousAccountId = Account['Id'] %}
+  {% endif %}
   {% endfor %}

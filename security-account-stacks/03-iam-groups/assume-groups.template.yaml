@@ -24,6 +24,7 @@ Resources:
                   - !GetAtt AccountListing.Arn
                   - !GetAtt BillingReadAccess.Arn
                   - !GetAtt SecurityAudit.Arn
+                  - !GetAtt LoggingReadAccess.Arn
                   {% for Role in Roles %}
                   - !Sub arn:aws:iam::${AWS::AccountId}:group/assume/Assume{{Role}}_*
                   {% endfor %}
@@ -60,3 +61,37 @@ Resources:
         PolicyName: {{Role}}Policy{{Account['Id']}}
   {% endfor %}
   {% endfor %}
+
+{% if MainAccount != SecurityAccount %}
+  BillingReadAccess:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: AssumeBillingView_Main_{{MainAccount}}
+      Path: /assume/
+      Policies:
+      - PolicyDocument:
+          Statement:
+            - Action:
+                - sts:AssumeRole
+              Effect: Allow
+              Resource:
+                - arn:aws:iam::{{MainAccount}}:role/AssumableBillingViewRole
+        PolicyName: BillingViewPolicy{{MainAccount}}
+{% endif %}
+
+{% if LoggingAccount != SecurityAccount %}
+  LoggingReadAccess:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: AssumeLoggingView_Logging_{{LoggingAccount}}
+      Path: /assume/
+      Policies:
+      - PolicyDocument:
+          Statement:
+            - Action:
+                - sts:AssumeRole
+              Effect: Allow
+              Resource:
+                - arn:aws:iam::{{LoggingAccount}}:role/AssumableLoggingViewRole
+        PolicyName: AuditPolicy{{LoggingAccount}}
+{% endif %}

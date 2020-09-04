@@ -1,0 +1,4 @@
+stack: organization-config
+create-missing: true
+capabilities:
+  - CAPABILITY_IAM

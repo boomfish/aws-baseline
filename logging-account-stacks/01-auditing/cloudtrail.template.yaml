@@ -8,7 +8,7 @@ Resources:
     DeletionPolicy: Delete
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !Sub ${AWS::StackName}-${CloudTrailBucketPrefix}-${AWS::AccountId}
+      BucketName: !Sub ${AWS::StackName}-${CloudTrailBucketPrefix}-{{MainAccount}}
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -44,7 +44,7 @@ Resources:
             Effect: Allow
             Principal:
               Service:
-               - cloudtrail.amazonaws.com
+                - cloudtrail.amazonaws.com
             Action: s3:PutObject
             Resource: !Sub ${CloudTrailBucket.Arn}/*
             Condition:
@@ -54,3 +54,9 @@ Resources:
 
   AthenaSearch:
     From: CloudTrail-Athena
+
+Outputs:
+  CloudTrailBucketName:
+    Value: !Ref CloudTrailBucket
+    Export:
+      Name: !Sub ${ExportPrefix}:CloudTrailBucketName

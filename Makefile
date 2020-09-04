@@ -4,6 +4,17 @@
 # accounts automatically. For detailed instructions on rolling out the Baseline check out docs/Rollout.md.
 # To start the container including all tools run `make shell`.
 
+# Main AWS region for deploying stacks and stacksets; you can override this value with make arguments
+Region=us-east-1
+
+# Current account ID in effect
+thisAccount:=$(shell aws sts get-caller-identity --query Account --output text)
+
+# Default is to assume a single main management account; you can override these values with make arguments
+MainAccount=$(thisAccount)
+SecurityAccount=$(thisAccount)
+LoggingAccount=$(thisAccount)
+
 ## Account Creation
 
 # Run with make create-account Name=ACCOUNT_NAME Email=ACCCOUNT_EMAIL
@@ -34,17 +45,70 @@ list-accounts:
 
 ## Baseline Rollout
 
+# Target for single management account deployment
 rollout:
-	cd main-account-stacks && make rollout
-	cd stack-sets && make rollout
+	@$(MAKE) logging-rollout
+	@$(MAKE) security-rollout
+	@$(MAKE) main-rollout
 
-diff:
-	@cd main-account-stacks && make diff
-	@cd stack-sets && make diff
+main-rollout:
+ifneq ($(thisAccount),$(MainAccount))
+	$(error You must use admin credentials for account ID $(MainAccount) to roll out the main stacks and stacksets)
+endif
+	@cd main-account-stacks && $(MAKE) rollout Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+	@cd stack-sets && $(MAKE) rollout Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+
+security-rollout:
+ifneq ($(thisAccount),$(SecurityAccount))
+	$(error You must use admin credentials for account ID $(SecurityAccount) to roll out the security stacks)
+endif
+	@cd security-account-stacks && $(MAKE) rollout Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+
+logging-rollout:
+ifneq ($(thisAccount),$(LoggingAccount))
+	$(error You must use admin credentials for account ID $(LoggingAccount) to roll out the logging stacks)
+endif
+	@cd logging-account-stacks && $(MAKE) rollout Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+
+diff:	logging-diff security-diff main-diff
+
+main-diff:
+	@cd main-account-stacks && $(MAKE) diff Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+	@cd stack-sets && $(MAKE) diff Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+
+security-diff:
+	@cd security-account-stacks && $(MAKE) diff Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+
+logging-diff:
+	@cd logging-account-stacks && $(MAKE) diff Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+
+LIST_STACKSETDIRS_CMD="echo $(StacksetDirs) | tr ' ' '\n'"
+
+stacksets-update:
+ifdef StacksetDirs
+	@cd stack-sets && $(MAKE) update Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) LIST_DIRS=$(LIST_STACKSETDIRS_CMD)
+else
+	@cd stack-sets && $(MAKE) update Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+endif
+
+stacksets-destroy:
+ifdef StacksetDirs
+	@cd stack-sets && $(MAKE) destroy Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) LIST_DIRS=$(LIST_STACKSETDIRS_CMD)
+else
+	$(error You must set the StacksetDirs variable to specify which stack sets you wish to destroy)
+endif
 
 excluded:
-	@cd main-account-stacks && make excluded -i
-	@cd stack-sets && make excluded -i
+	@cd main-account-stacks && $(MAKE) excluded -i
+	@cd security-account-stacks && $(MAKE) excluded -i
+	@cd logging-account-stacks && $(MAKE) excluded -i
+	@cd stack-sets && $(MAKE) excluded -i
+
+list-stack-sets:
+	@cd stack-sets && $(MAKE) stack-sets
+
+stack-set-instances:
+	@cd stack-sets && $(MAKE) stack-set-instances
 
 ## Development Tooling
 

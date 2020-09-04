@@ -56,12 +56,12 @@ Parameters:
     MinValue: 0
     MaxValue: 255
   CIDRSuffix:
-    Description: 'Class D of VPC (10.0.0.0/XXX)'
+    Description: 'Number of bits for VPC address block (10.0.0.0/XXX)'
     Type: Number
     Default: 16
-    ConstraintDescription: 'Must be in the range [0-255]'
-    MinValue: 0
-    MaxValue: 255
+    ConstraintDescription: 'Must be in the range [8-24]'
+    MinValue: 8
+    MaxValue: 24
   CIDRSubnetBits:
     Description: 'The number of subnet bits for the CIDR. Specifying a value "8" for this parameter will create a CIDR with a mask of "/24". Calculated by subtracting the number from 32. See Fn::Cidr function for more details'
     Type: Number
@@ -101,7 +101,11 @@ Resources:
       InstanceTenancy: default
       Tags:
       - Key: Name
+        {% if AccountCIDR %}
+        Value: !FindInMap [!Ref 'AWS::AccountId', !Ref 'AWS::Region', 'CIDR']
+        {% else %}
         Value: !Sub '${ClassA}.${ClassB}.${ClassC}.${ClassD}/${CIDRSuffix}'
+        {% endif %}
 
   FlowLogsLogGroup:
     Type: AWS::Logs::LogGroup

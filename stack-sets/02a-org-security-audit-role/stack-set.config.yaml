@@ -1,0 +1,8 @@
+stack-set: org-security-audit-role
+capabilities:
+  - CAPABILITY_NAMED_IAM
+main-account-parameter: true
+max-concurrent-percentage: 100
+all-subaccounts: true
+tags:
+  ValidateAllSubAccounts: true

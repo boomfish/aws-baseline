@@ -1,4 +1,3 @@
-stack: vpc
 stack-set: vpc
 vars:
   AvailabilityZones: 3
