@@ -1,4 +1,4 @@
-{% set Roles = ['Admin', 'Developer', 'CloudFormationDeveloper', 'ReadOnly', 'SecurityAudit', 'Operations'] %}
+{% set Roles = ['Admin', 'Developer', 'CloudFormationDeveloper', 'ReadOnly', 'SecurityAudit', 'Operations', 'TerraformPlan', 'TerraformApply'] %}
 
 Resources:
   GroupManagement:

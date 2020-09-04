@@ -4,6 +4,11 @@ Parameters:
     Default: true
     AllowedValues: [true, false]
     Description: Require MFA when assuming into a Role.
+  MFAforTerraform:
+    Type: String
+    Default: true
+    AllowedValues: [true, false]
+    Description: Require MFA when assuming into a Terraform Role.
   AllowedRegions:
     Type: String
     Description: Comma separated list of Regions that can be used in your AWS Accounts.
@@ -17,6 +22,7 @@ Parameters:
 
 Conditions:
   HasMFAEnabled: !Equals [true, !Ref MFA]
+  HasMFAEnabledForTerraform: !Equals [true, !Ref MFAforTerraform]
 
 Resources:
   AssumableAdminRole:
@@ -187,7 +193,34 @@ Resources:
       RoleName: AssumableOperationsRole
     Type: AWS::IAM::Role
 
+  AssumableTerraformPlanRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument: {% include 'policy-statements/assumable-terraform-role-policy-document.json'%}
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
+      RoleName: AssumableTerraformPlanRole
+    Type: AWS::IAM::Role
 
+  AssumableTerraformApplyRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument: {% include 'policy-statements/assumable-terraform-role-policy-document.json'%}
+      PermissionsBoundary: !Ref DeveloperPermissionsBoundary
+      Policies:
+        - PolicyName: Terraform
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Sid: TerraformApplyAccess
+                Effect: Allow
+                Action:
+                  - '*'
+                Resource:
+                  - '*'
+      RoleName: AssumableTerraformApplyRole
+    Type: AWS::IAM::Role
+  
 Outputs:
   AssumableAdminRoleArn:
     Value: !GetAtt AssumableAdminRole.Arn
