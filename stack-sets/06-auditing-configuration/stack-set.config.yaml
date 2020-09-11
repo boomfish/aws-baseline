@@ -4,9 +4,9 @@ capabilities:
 all-accounts: true
 main-account-parameter: true
 max-concurrent-percentage: 100
-parameters:
-  DeliveryFrequency: TwentyFour_Hours
-  CloudTrailLogsRetentionInDays: 7
+#parameters:
+#  DeliveryFrequency: Six_Hours
+#  CloudTrailLogsRetentionInDays: 90
 tags:
   ValidateAllAccounts: true
 #  ValidateAllRegions: true
