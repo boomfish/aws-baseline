@@ -1,7 +1,4 @@
 stack-set: guardduty-main
-#all-regions: true
-excluded-regions:
-  - eu-north-1
 organization-variables: true
 max-concurrent-percentage: 100
 tags:

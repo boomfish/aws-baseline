@@ -1,8 +1,5 @@
 stack-set: guardduty-member
 max-concurrent-percentage: 100
-#all-regions: true
-excluded-regions:
-  - eu-north-1
 main-account-parameter: true
 tags:
 #  ValidateAllRegions: true
