@@ -8,7 +8,8 @@ Before deploying the stacks you should run `make diff` to get a diff on all stac
 
 Following a short summary for each stack. For individual documentation on each stack please consult the `README.md` in each of the stack directories. 
 
-* `01-auditing`: S3 Buckets and configuration to store CloudTrail, Config and FlowLogs data
+* `01-auditing`: S3 Buckets and configuration to store CloudTrail, Config and FlowLogs data. [01-auditing README](./01-auditing/README.md)
+* `02-audit-access`: IAM role to access audit data [02-audit-access README](./02-audit-access/README.md)
 
 ## Excluding Stacks
 

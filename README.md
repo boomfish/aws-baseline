@@ -29,7 +29,13 @@ The plan for this Baseline is in the future to be compatible with Control Tower 
 
 ## General Baseline Info
 
-The `main-account-stacks` folder contains CloudFormation Stacks that should be deployed first into your main account. It will set up roles and groups for your existing accounts and configure S3 Buckets to store various auditing data.
+There are 3 folders containing ClouldFormation Stacks for management accounts:
+
+* main-account-stacks (CloudWatch StackSet roles, Config aggregator, budget policy, Organization controls)
+* logging-account-stacks (CloudTrail and FlowLog aggregation and analysis)
+* security-account-stacks (IAM groups for cross-account role assumption)
+
+These folders should deployed first but may be deployed in any order. In a standard setup they are all deployed to your main account. In a multi management account setup, the logging and security account stacks may be deployed into separate accounts.
 
 The `stack-sets` folder contains StackSets that should be created in your main account and then deployed
 into your member accounts. For more information on the StackSets check out the README in the `stack-sets` folder.
@@ -67,11 +73,15 @@ Make sure to familiarize yourself with the specific services so you have a good 
 
 ## User and Access Management
 
-In the main account we're creating several `assume-role` groups which allow users to assume roles in sub-accounts. They are created automatically for any account found in the current organization. When you add new accounts you have to redeploy the stack so it picks up the new accounts and creates groups accordingly. For more information on assuming roles in another account check out the [Assume Role Documentation](docs/Assume.md)
+In the security account we're creating several `assume-role` groups which allow users to assume roles in sub-accounts. They are created automatically for any account found in the current organization. When you add new accounts you have to redeploy the stack so it picks up the new accounts and creates groups accordingly. For more information on assuming roles in another account check out the [Assume Role Documentation](docs/Assume.md)
 
-The stacks in the main account also create various groups for User Management. This allows you to add new users to groups to for example create new users or manage group membership. For more information on User Management check out the [User Management Documentation](docs/UserManagement.md)
+The stacks in the security account also create various groups for User Management. This allows you to add new users to groups to for example create new users or manage group membership. For more information on User Management check out the [User Management Documentation](docs/UserManagement.md)
 
-Check out the [main-account-stacks README](./main-account-stacks/README.md) for more detail on each stack that gets deployed to the main AWS account.
+For more detail on each stack that gets deployed to the management accounts, check out the READMEs:
+
+* [main-account-stacks README](./main-account-stacks/README.md)
+* [logging-account-stacks README](./logging-account-stacks/README.md)
+* [security-account-stacks README](./security-account-stacks/README.md)
 
 ## Tooling
 

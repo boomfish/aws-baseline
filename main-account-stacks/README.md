@@ -8,12 +8,12 @@ Before deploying the stacks you should run `make diff` to get a diff on all stac
 
 Following a short summary for each stack. For individual documentation on each stack please consult the `README.md` in each of the stack directories. 
 
-* `00-stack-set-admin-role`: Roles to allow CloudFormation to deploy stacks to subaccounts
-* `01-config`: AWS Config aggregator for the organization
-* `02-budget`: Account Budget with MaxBudget set and alerts sent to Account Email by default
-* `03-iam-groups-roles`: IAM groups and roles to manage access to the main account
-* `04-service-control-policies`: Service Control Policies deployed as a StackSet
-* `05-validate-stack-set-deployments`: Validates deployed StackSet instances against the tags set on the StackSets. Records AWS Config Evaluations to see missing StackSet Instances.
+* `00-stack-set-admin-role`: Roles to allow CloudFormation to deploy stacks to subaccounts. [00-stack-set-admin-role README](./00-stack-set-admin-role/README.md)
+* `01-config`: AWS Config aggregator for the organization. [01-config README](./01-config/README.md)
+* `02-budget`: Account Budget with MaxBudget set and alerts sent to Account Email by default. [02-budget README](./02-budget/README.md)
+* `03-iam-groups-roles`: IAM groups and roles to manage access to the main account.[03-iam-groups-roles README](./03-iam-groups-roles/README.md)
+* `04-service-control-policies`: Service Control Policies deployed as a StackSet. [04-service-control-policies README](./04-service-control-policies/README.md)
+* `05-validate-stack-set-deployments`: Validates deployed StackSet instances against the tags set on the StackSets. Records AWS Config Evaluations to see missing StackSet Instances. [05-validate-stack-set-deployments README](./05-validate-stack-set-deployments/README.md)
 
 ## Excluding Stacks
 
