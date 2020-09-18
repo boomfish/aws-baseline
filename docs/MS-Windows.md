@@ -60,7 +60,16 @@ To run a baseline operation, run the corresponding baseline make target through 
 The `compose-make` target is required to invoke any of the following top-level make targets from Windows:
 
 - rollout
+- main-rollout
+- security-rollout
+- logging-rollout
+- stacksets-rollout
+- stacksets-update
+- stacksets-destroy
 - diff
+- main-diff
+- security-diff
+- logging-diff
 - excluded
 - test-python
 
@@ -71,10 +80,16 @@ The following targets require either the use of `compose-make` or for the AWS co
 
 Note that the `compose-make` target builds the baseline Docker image at each invocation. The first invocation may be quite slow as the Docker image is built, but subsequent invocations should be much faster as successful Docker build steps are cached.
 
-#### Example
+#### Examples
 
 To roll out the baseline with the default values (normally "make rollout"):
 
 ```bat
 make compose-make Args=rollout
+```
+
+To roll out the baseline using the ap-southeast-2 AWS region (normally "make rollout Region='ap-southeast-2'"):
+
+```bat
+make compose-make Args="rollout Region='ap-southeast-2'"
 ```

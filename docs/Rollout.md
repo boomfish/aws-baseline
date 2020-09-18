@@ -54,6 +54,8 @@ By default the `Excluded` file in the `stack-sets` folder lists `02a-org-securit
 
 When using the toolbox all required tools are already installed. In case you do not want to or can't use the Docker container you need to install Formica with `pip install formica-cli` and make sure you have `make` installed on your System.
 
+Rolling out from Microsoft Windows requires Docker Desktop and GNU Make, and uses modified versions of the rollout commands. See [Running aws-baseline from Microsoft Windows](./MS-Windows.md) for details.
+
 ## Rolling out the Baseline with a Single Management Account
 
 Now finally after we've made all the adjustments we need we can roll out the Baseline. Make sure you have local credentials that have Admin Access into your Main Account. If you're in the Toolbox Docker Container (start it with `make shell`) or have [`awsinfo`](https://theserverlessway.com/tools/awsinfo/) installed you can run `awsinfo me` and `awsinfo credentials` to see which User you're logged into and what the currently used credentials and region are.
