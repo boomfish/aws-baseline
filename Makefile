@@ -66,16 +66,19 @@ StacksetOptions=$(StacksetOptions) SingleRegion=1
 endif
 
 # Target for single management account deployment
-rollout:
-	@$(MAKE) logging-rollout
-	@$(MAKE) security-rollout
-	@$(MAKE) main-rollout
+rollout: logging-rollout security-rollout main-rollout
+	@$(MAKE) stacksets-rollout
 
 main-rollout:
 ifneq ($(thisAccount),$(MainAccount))
 	$(error You must use admin credentials for account ID $(MainAccount) to roll out the main stacks and stacksets)
 endif
 	@cd main-account-stacks && $(MAKE) rollout Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+
+stacksets-rollout:
+ifneq ($(thisAccount),$(MainAccount))
+	$(error You must use admin credentials for account ID $(MainAccount) to roll out the main stacks and stacksets)
+endif
 	@cd stack-sets && $(MAKE) rollout Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(StacksetOptions)
 
 security-rollout:
