@@ -34,32 +34,6 @@ Resources:
           PolicyName: AdminPolicy
     Type: AWS::IAM::Group
 
-  SecurityAudit:
-    Properties:
-      GroupName: SecurityAudit
-      Path: /security/
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/SecurityAudit
-      Policies:
-        - PolicyName: SecurityAudit
-          PolicyDocument:
-            Version: '2008-10-17'
-            Statement:
-              - Action:
-                  - support:DescribeTrustedAdvisorChecks
-                  - sns:ListSubscriptions
-                Effect: Allow
-                Resource: "*"
-        - PolicyName: AssumeSecurityAuditRole
-          PolicyDocument:
-            Statement:
-              - Action:
-                  - sts:AssumeRole
-                Effect: Allow
-                Resource:
-                  - arn:aws:iam::*:role/OrganizationSecurityAuditRole
-    Type: AWS::IAM::Group
-
   UserCredentialsManagement:
     Properties:
       GroupName: UserCredentialsManagement
@@ -141,6 +115,14 @@ Resources:
           PolicyName: UserCredentialManagement
     Type: AWS::IAM::Group
 
+  ReadOnlyAccess:
+    Properties:
+      GroupName: ReadOnlyAccess
+      Path: /admin/
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnly
+    Type: AWS::IAM::Group
+
   AccountListing:
     Properties:
       GroupName: ListAccounts
@@ -177,3 +159,29 @@ Resources:
           PolicyName: BillingReadAccess
 
 {% endif %}
+
+  OrganizationSecurityAudit:
+    Properties:
+      GroupName: OrganizationSecurityAudit
+      Path: /security/
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/SecurityAudit
+      Policies:
+        - PolicyName: SecurityAudit
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Action:
+                  - support:DescribeTrustedAdvisorChecks
+                  - sns:ListSubscriptions
+                Effect: Allow
+                Resource: "*"
+        - PolicyName: AssumeSecurityAuditRole
+          PolicyDocument:
+            Statement:
+              - Action:
+                  - sts:AssumeRole
+                Effect: Allow
+                Resource:
+                  - arn:aws:iam::*:role/OrganizationSecurityAuditRole
+    Type: AWS::IAM::Group
