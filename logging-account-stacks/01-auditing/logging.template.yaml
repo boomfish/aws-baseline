@@ -15,6 +15,11 @@ Resources:
       AccessControl: LogDeliveryWrite
       LoggingConfiguration:
         LogFilePrefix: logging
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
 
 Outputs:
   LoggingBucketName:
