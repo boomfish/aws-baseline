@@ -25,7 +25,7 @@ def handler(event, context):
         request_type = event['RequestType']
         if request_type in ['Create', 'Update']:
             update_parameters = {key: cast_type(resource_properties[key]) for key, cast_type in
-                                 password_policy_keys.items()}
+                                password_policy_keys.items()}
             print(update_parameters)
             response = iam.update_account_password_policy(**update_parameters)
             print(response)

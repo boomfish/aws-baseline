@@ -1,6 +1,6 @@
 Resources:
   FailAllResourcesCompliance:
-    From: Modules::Lambda
+    From: modules::lambda
     Properties:
       Condition: IsDisabledRegion
       Code: |

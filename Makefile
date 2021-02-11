@@ -39,7 +39,7 @@ endif
 	aws organizations create-account --email $(Email) --account-name $(Name) --iam-user-access-to-billing ALLOW
 	@sleep 5
 	@echo "Waiting for Account creation to finish"
-	@while [[ $$(aws organizations list-accounts --query "Accounts[?Name=='$(Name)'].Status" --output text) != 'ACTIVE' ]]; do (echo -n '.' && sleep 2) done
+	@while [ $$(aws organizations list-accounts --query "Accounts[?Name=='$(Name)'].Status" --output text) != 'ACTIVE' ]; do (echo -n '.' && sleep 2) done
 	@echo "Account $(Name) with Email $(Email) created successfully"
 
 create-account-alias:
@@ -60,9 +60,9 @@ endif
 
 ## Baseline Rollout
 
-StacksetOptions=
+SingleRegionOption=
 ifdef SingleRegion
-StacksetOptions=$(StacksetOptions) SingleRegion=1
+SingleRegionOption="SingleRegion=1"
 endif
 
 # Target for single management account deployment
@@ -79,7 +79,7 @@ stacksets-rollout:
 ifneq ($(thisAccount),$(MainAccount))
 	$(error You must use admin credentials for account ID $(MainAccount) to roll out the main stacks and stacksets)
 endif
-	@cd stack-sets && $(MAKE) rollout Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(StacksetOptions)
+	@cd stack-sets && $(MAKE) rollout Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(SingleRegionOption)
 
 security-rollout:
 ifneq ($(thisAccount),$(SecurityAccount))
@@ -109,14 +109,14 @@ LIST_STACKSETDIRS_CMD="echo $(StacksetDirs) | tr ' ' '\n'"
 
 stacksets-update:
 ifdef StacksetDirs
-	@cd stack-sets && $(MAKE) update Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(StacksetOptions) LIST_DIRS=$(LIST_STACKSETDIRS_CMD)
+	@cd stack-sets && $(MAKE) update Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(SingleRegionOption) LIST_DIRS=$(LIST_STACKSETDIRS_CMD)
 else
-	@cd stack-sets && $(MAKE) update Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(StacksetOptions)
+	@cd stack-sets && $(MAKE) update Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(SingleRegionOption)
 endif
 
 stacksets-destroy:
 ifdef StacksetDirs
-	@cd stack-sets && $(MAKE) destroy Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(StacksetOptions) LIST_DIRS=$(LIST_STACKSETDIRS_CMD)
+	@cd stack-sets && $(MAKE) destroy Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(SingleRegionOption) LIST_DIRS=$(LIST_STACKSETDIRS_CMD)
 else
 	$(error You must set the StacksetDirs variable to specify which stack sets you wish to destroy)
 endif

@@ -9,10 +9,10 @@ SecurityAccount=$(shell aws sts get-caller-identity --query Account --output tex
 LoggingAccount=$(shell aws sts get-caller-identity --query Account --output text)
 Region=us-east-1
 
-StacksetOptions=Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
 ifdef SingleRegion
-StacksetOptions=$(StacksetOptions) SingleRegion=1
+SingleRegionOption=SingleRegion=1
 endif
+StacksetOptions=Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(SingleRegionOption)
 
 stack-sets:
 	$(LIST_STACK_SETS_COMMAND) | (xargs -n 1 -P 15 aws cloudformation describe-stack-set --query "StackSet.{\"1.Name\":StackSetName, \"2.Tags\":join(', ', Tags[].join('=', [Key,Value]))}" --stack-set-name) | jq -s -c 'sort_by(."1.Name")' | python3 ../scripts/json_table.py StackSets
