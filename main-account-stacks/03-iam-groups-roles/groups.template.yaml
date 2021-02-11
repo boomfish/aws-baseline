@@ -120,7 +120,7 @@ Resources:
       GroupName: ReadOnlyAccess
       Path: /admin/
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/ReadOnly
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
     Type: AWS::IAM::Group
 
   AccountListing:

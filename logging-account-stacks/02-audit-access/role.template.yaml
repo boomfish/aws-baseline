@@ -86,13 +86,12 @@ Resources:
 
 {% if SecurityAccount != LoggingAccount %}
 
-  AssumableAuditRole:
+  AssumableSecurityAuditRole:
     Properties:
       MaxSessionDuration: !Ref MaxSessionDuration
       AssumeRolePolicyDocument: {% include 'policy-statements/assumable-role-policy-document.json'%}
       ManagedPolicyArns:
-        - !Sub arn:aws:iam::${AWS::AccountId}:policy/admin/AuditBucketsReadAccess
-        - arn:aws:iam::aws:policy/service-role/AWSQuicksightAthenaAccess
+        - arn:aws:iam::aws:policy/SecurityAudit
       Policies:
         - PolicyName: SecurityAudit
           PolicyDocument:
@@ -103,14 +102,23 @@ Resources:
                   - sns:ListSubscriptions
                 Effect: Allow
                 Resource: "*"
-      RoleName: AssumableAuditRole
+      RoleName: AssumableSecurityAuditRole
     Type: AWS::IAM::Role
 
+  AssumableLoggingViewRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument: {% include 'policy-statements/assumable-role-policy-document.json'%}
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/admin/AuditBucketsReadAccess
+        - arn:aws:iam::aws:policy/service-role/AWSQuicksightAthenaAccess
+      RoleName: AssumableLoggingViewRole
+    Type: AWS::IAM::Role
 
 Outputs:
-  AssumableAuditRoleArn:
-    Value: !GetAtt AssumableAuditRole.Arn
+  AssumableLoggingViewRoleArn:
+    Value: !GetAtt AssumableLoggingViewRole.Arn
     Export:
-      Name: !Sub ${ExportPrefix}:AssumableAuditRoleArn
+      Name: !Sub ${ExportPrefix}:AssumableLoggingViewRoleArn
 
 {% endif %}

@@ -93,5 +93,21 @@ Resources:
               Effect: Allow
               Resource:
                 - arn:aws:iam::{{LoggingAccount}}:role/AssumableLoggingViewRole
-        PolicyName: AuditPolicy{{LoggingAccount}}
+        PolicyName: LoggingViewPolicy{{LoggingAccount}}
+
+  LoggingSecurityAudit:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: AssumeSecurityAudit_Logging_{{LoggingAccount}}
+      Path: /assume/
+      Policies:
+      - PolicyDocument:
+          Statement:
+            - Action:
+                - sts:AssumeRole
+              Effect: Allow
+              Resource:
+                - arn:aws:iam::{{LoggingAccount}}:role/AssumableSecurityAuditRole
+        PolicyName: SecurityAuditPolicy{{LoggingAccount}}
+
 {% endif %}
