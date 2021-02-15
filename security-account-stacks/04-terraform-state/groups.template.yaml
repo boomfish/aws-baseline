@@ -1,0 +1,85 @@
+Resources:
+  TerraformBucketList:
+    Properties:
+      ManagedPolicyName: TerraformBucketList
+      Path: /terraform/
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - s3:ListBucket
+            Effect: Allow
+            Resource: !GetAtt RemoteStateBucket.Arn
+    Type: AWS::IAM::ManagedPolicy
+
+  TerraformLocking:
+    Properties:
+      ManagedPolicyName: TerraformLocking
+      Path: /terraform/
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+            Effect: Allow
+            Resource: !GetAtt LockingTable.Arn
+    Type: AWS::IAM::ManagedPolicy
+
+
+  TerraformStateAllReadWrite:
+    Properties:
+      GroupName: TerraformState_All_ReadWrite
+      Path: /terraform/
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/terraform/TerraformBucketList
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/terraform/TerraformLocking
+      Policies:
+        - PolicyName: TerraformReadWriteState
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Effect: Allow
+                Resource: !Sub arn:aws:s3:::${RemoteStateBucketPrefix}-${AWS::AccountId}
+    Type: AWS::IAM::Group
+
+  TerraformStateAllReadOnly:
+    Properties:
+      GroupName: TerraformState_All_ReadOnly
+      Path: /terraform/
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/terraform/TerraformBucketList
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/terraform/TerraformLocking
+      Policies:
+        - PolicyName: TerraformReadState
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Action:
+                  - s3:GetObject
+                Effect: Allow
+                Resource: !Sub arn:aws:s3:::${RemoteStateBucketPrefix}-${AWS::AccountId}
+    Type: AWS::IAM::Group
+
+  TerraformStateInfraReadWrite:
+    Properties:
+      GroupName: TerraformState_Infra_ReadWrite
+      Path: /terraform/
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/terraform/TerraformBucketList
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/terraform/TerraformLocking
+      Policies:
+        - PolicyName: TerraformReadWriteState
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Effect: Allow
+                Resource: !Sub arn:aws:s3:::${RemoteStateBucketPrefix}-${AWS::AccountId}/infra/*
+    Type: AWS::IAM::Group

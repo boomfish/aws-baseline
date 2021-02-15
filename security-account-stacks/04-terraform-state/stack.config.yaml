@@ -1,0 +1,4 @@
+stack: terraform-state
+capabilities:
+  - CAPABILITY_NAMED_IAM
+create-missing: true

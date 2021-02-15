@@ -28,6 +28,7 @@ Resources:
                   {% for Role in Roles %}
                   - !Sub arn:aws:iam::${AWS::AccountId}:group/assume/Assume{{Role}}_*
                   {% endfor %}
+                  - !Sub arn:aws:iam::${AWS::AccountId}:group/terraform/TerraformState_*
               - Action:
                   - iam:ListGroups
                   - iam:ListGroupsForUser

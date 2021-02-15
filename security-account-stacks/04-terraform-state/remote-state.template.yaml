@@ -1,0 +1,33 @@
+Parameters:
+  RemoteStateBucketPrefix:
+    Type: String
+    Default: 'terraform-state'
+  LockingTablePrefix:
+    Type: String
+    Default: 'terraform-locks'
+
+Resources:
+  RemoteStateBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${RemoteStateBucketPrefix}-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  LockingTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${LockingTablePrefix}-${AWS::AccountId}
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      AttributeDefinitions:
+        - AttributeName: 'LockID'
+          AttributeType: S
+      KeySchema:
+        - AttributeName: 'LockID'
+          KeyType: HASH

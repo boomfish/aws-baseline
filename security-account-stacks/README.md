@@ -9,6 +9,7 @@ Before deploying the stacks you should run `make diff` to get a diff on all stac
 Following a short summary for each stack. For individual documentation on each stack please consult the `README.md` in each of the stack directories. 
 
 * `03-iam-groups`: IAM groups to manage Users and give access to Sub Accounts. [03-iam-groups README](./03-iam-groups/README.md)
+* `04-terraform-state`: S3 bucket and DynamoDB table for managing Terraform remote state. Excluded by default. [04-terraform-state README](./04-terraform-state/README.md)
 
 ## Excluding Stacks
 
