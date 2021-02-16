@@ -1,0 +1,19 @@
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "ViewBilling",
+      "Effect": "Allow",
+      "Action": [
+          "aws-portal:View*",
+          "awsbillingconsole:View*",
+          "budgets:ViewBudget",
+          "ce:*",
+          "cur:*",
+          "pricing:Describe*",
+          "pricing:Get*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

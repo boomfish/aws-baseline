@@ -14,6 +14,7 @@ Following a short summary for each stack. For individual documentation on each s
 * `03-iam-groups-roles`: IAM groups and roles to manage access to the main account.[03-iam-groups-roles README](./03-iam-groups-roles/README.md)
 * `04-service-control-policies`: Service Control Policies deployed as a StackSet. [04-service-control-policies README](./04-service-control-policies/README.md)
 * `05-validate-stack-set-deployments`: Validates deployed StackSet instances against the tags set on the StackSets. Records AWS Config Evaluations to see missing StackSet Instances. [05-validate-stack-set-deployments README](./05-validate-stack-set-deployments/README.md)
+* `06-sso-permission`: SSO permission sets that provide an alternative to IAM roles for accessing subaccounts. These are only applicable if SSO is being used. Excluded by default. [04-service-control-policies README](./06-sso-permissions/README.md)
 
 ## Excluding Stacks
 

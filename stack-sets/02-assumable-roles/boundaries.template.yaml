@@ -1,4 +1,4 @@
-{% set DisabledIdentitiesServices = DisabledIdentitiesServices or ['iam', 'cloudtrail', 'budgets', 'config', 'guardduty']%}
+{% set DisabledIdentitiesServices = DisabledIdentitiesServices or ['iam', 'cloudtrail', 'budgets', 'config', 'guardduty', 'sso'] %}
 {% set AdditionalAllowedActions = AdditionalAllowedActions or ['iam:GetRole', 'iam:PassRole'] %}
 
 Parameters:

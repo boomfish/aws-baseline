@@ -1,0 +1,62 @@
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowMostActionsInAllowedRegions",
+      "Effect": "Allow",
+      "NotAction": [
+        "iam:*",
+        "sso:*",
+        "cloudtrail:*",
+        "budgets:*",
+        "config:*",
+        "guardduty:*",
+        "organizations:*",
+        "account:*"
+      ],
+      {% if AllowedRegions %}
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": [
+            "{{ AllowedRegions | replace(',','\",\"') }}"
+          ]
+        }
+      },
+      {% endif %}
+      "Resource": "*"
+    },
+    {
+      "Sid": "ViewBilling",
+      "Effect": "Allow",
+      "Action": [
+        "aws-portal:View*",
+        "awsbillingconsole:View*",
+        "ce:GetCostAndUsage",
+        "budgets:ViewBudget"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ViewAccounts",
+      "Effect": "Allow",
+      "Action": [
+        "organizations:DescribeOrganization",
+        "organizations:ListAccounts",
+        "iam:ListAccountAliases"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowedGlobalActions",
+      "Effect": "Allow",
+      "Action": [
+        "route53:*",
+        "ce:*",
+        "cur:*",
+        "iam:GetRole",
+        "iam:PassRole"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

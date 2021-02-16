@@ -1,0 +1,73 @@
+Parameters:
+  SSOInstanceArn:
+    Type: String
+    Description: ARN for SSO instance used by the organization
+  AdminSessionDuration:
+    Type: String
+    Default: PT1H
+    Description: Maximum Duration for SSO sessions using an admin permission set in ISO-8601 format
+  SessionDuration:
+    Type: String
+    Default: PT8H
+    Description: Maximum Duration for SSO sessions using a non-admin permission set in ISO-8601 format
+
+Resources:
+
+  AdminAccess:
+    Properties:
+      InstanceArn: !Ref SSOInstanceArn
+      Name: AdminAccess
+      Description: 'Administrators have full control over every user and service in the account'
+      SessionDuration: !Ref AdminSessionDuration
+      ManagedPolicies:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+    Type: AWS::SSO::PermissionSet
+
+  DeveloperAccess:
+    Properties:
+      InstanceArn: !Ref SSOInstanceArn
+      Name: DeveloperAccess
+      Description: 'Developers can manage most resources in allowed regions except for Accounts, IAM, SSO, and audit controls'
+      SessionDuration: !Ref SessionDuration
+      InlinePolicy: {% include 'policy-statements/developer-access-policy-document.json' %}
+    Type: AWS::SSO::PermissionSet
+
+  BillingReadAccess:
+    Properties:
+      InstanceArn: !Ref SSOInstanceArn
+      Name: BillingReadAccess
+      Description: 'View bills and budgets and use the Cost Explorer'
+      SessionDuration: !Ref SessionDuration
+      InlinePolicy: {% include 'policy-statements/billing-read-access-policy-document.json' %}
+    Type: AWS::SSO::PermissionSet
+
+  LoggingReadAccess:
+    Properties:
+      InstanceArn: !Ref SSOInstanceArn
+      Name: LoggingReadAccess
+      Description: 'Read S3 buckets and run Athena queries (useful for the audit account)'
+      SessionDuration: !Ref SessionDuration
+      ManagedPolicies:
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+        - arn:aws:iam::aws:policy/service-role/AWSQuicksightAthenaAccess
+    Type: AWS::SSO::PermissionSet
+
+  SecurityAuditAccess:
+    Properties:
+      InstanceArn: !Ref SSOInstanceArn
+      Name: SecurityAuditAccess
+      Description: 'Run security audit scans across AWS accounts to find configuration vulnerabilities'
+      SessionDuration: !Ref SessionDuration
+      ManagedPolicies:
+        - arn:aws:iam::aws:policy/SecurityAudit
+      InlinePolicy: {% include 'policy-statements/security-audit-policy-document.json' %}
+    Type: AWS::SSO::PermissionSet
+
+  OperationsAccess:
+    Properties:
+      InstanceArn: !Ref SSOInstanceArn
+      Name: DeveloperAccess
+      Description: 'View Cloudwatch logs'
+      SessionDuration: !Ref SessionDuration
+      InlinePolicy: {% include 'policy-statements/operations-access-policy-document.json' %}
+    Type: AWS::SSO::PermissionSet

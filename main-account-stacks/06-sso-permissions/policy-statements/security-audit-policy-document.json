@@ -1,0 +1,14 @@
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "AdditionalAuditChecks",
+      "Effect": "Allow",
+      "Action": [
+          "support:DescribeTrustedAdvisorChecks",
+          "sns:ListSubscriptions"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+stack: sso-permissions
+#vars:
+#  AllowedRegions: us-east-1
+parameters:
+  SSOInstanceArn: arn:aws:sso:::instance/ssoins-XXXXXXXXXXXXXXXX
+create-missing: true

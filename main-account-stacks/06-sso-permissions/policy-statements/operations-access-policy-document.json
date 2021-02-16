@@ -1,0 +1,20 @@
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "ViewLogs",
+      "Effect": "Allow",
+      "Action": [
+          "cloudwatch:Describe*",
+          "cloudwatch:Get*",
+          "cloudwatch:List*",
+          "logs:Describe*",
+          "logs:Get*",
+          "logs:List*",
+          "logs:FilterLogEvents",
+          "logs:StartQuery"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
