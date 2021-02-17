@@ -23,6 +23,7 @@ The stack creates the following permission sets:
 - `OperationsAccess`: Equivalent to the `AssumableOperationsRole` IAM role in subaccounts
 
 The maximum duration of `AdminAccess` sessions is controlled by the `AdminSessionDuration` parameter (1 hour by default). The maximum duration of sessions from the other permission sets is controlled by the `SessionDuration` parameter (8 hours by default).
+
 ## Region Restrictions
 
 The `DeveloperAccess` permission set can be restricted to specific regions by setting the `AllowedRegions` variable. The value is a comma-separated list of region names. If it is not set, the permission set is not restricted by region.
@@ -33,6 +34,6 @@ There are some limitations of SSO permission sets compared with IAM group and ro
 
 - SSO MFA is different to IAM MFA, and SSO MFA sessions do not pass MFA conditions in IAM policy statements. Currently there are no IAM policy statement conditions for checking SSO MFA.
 
-- SSO permission sets do not support IAM permission boundaries
+- SSO permission sets do not support IAM permission boundaries.
 
-- SSO Permission sets are created at the organization level and are thus difficult to customize 
+- SSO Permission sets are created at the organization level and permission set policy statements cannot use variables such as `${AWS::AccountId}`. If slightly different permissions are required for specific accounts, a separate SSO permission set is required.

@@ -6,7 +6,7 @@ Before deploying the stacks you should run `make diff` to get a diff on all stac
 
 ## Stack Summaries:
 
-Following a short summary for each stack. For individual documentation on each stack please consult the `README.md` in each of the stack directories. 
+Following a short summary for each stack. For individual documentation on each stack please consult the `README.md` in each of the stack directories.
 
 * `00-stack-set-admin-role`: Roles to allow CloudFormation to deploy stacks to subaccounts. [00-stack-set-admin-role README](./00-stack-set-admin-role/README.md)
 * `01-config`: AWS Config aggregator for the organization. [01-config README](./01-config/README.md)
