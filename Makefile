@@ -4,15 +4,21 @@
 # accounts automatically. For detailed instructions on rolling out the Baseline check out docs/Rollout.md.
 # To start the container including all tools run `make shell`.
 
+# BuildKit is a faster method for building Docker images, but requires Docker 18.09 or later. Set to 0 to disable
+UseBuildKit=1
+
+# Docker-compose command
+DOCKER_COMPOSE=DOCKER_BUILDKIT=$(UseBuildKit) docker-compose
+
 # If this variable is set, run awsinfo through Docker Compose instead of directly
 ifdef ComposeAwsinfo
-AWSINFO=docker-compose run --rm awsinfo
+AWSINFO=$(DOCKER_COMPOSE) run --rm awsinfo
 else
 AWSINFO=awsinfo
 endif
 
 # Prefix to run commands in the aws-baseline Docker Compose environment
-BASELINE=docker-compose run --rm aws-baseline
+BASELINE=$(DOCKER_COMPOSE) run --rm aws-baseline
 
 # Main AWS region for deploying stacks and stacksets; you can override this value with make arguments
 Region=us-east-1
@@ -140,10 +146,10 @@ test-python:
 
 build:
 	touch .bash_history
-	docker-compose build --pull aws-baseline
+	$(DOCKER_COMPOSE) build --pull aws-baseline
 
 rebuild-baseline:
-	docker-compose build --pull --no-cache aws-baseline
+	$(DOCKER_COMPOSE) build --pull --no-cache aws-baseline
 
 shell: build
 	$(BASELINE) bash
@@ -159,7 +165,7 @@ endif
 
 # Invoke this target before using ComposeAwsinfo=1
 pull-awsinfo:
-	docker-compose pull awsinfo
+	$(DOCKER_COMPOSE) pull awsinfo
 
 # Security Audit
 
@@ -170,7 +176,7 @@ ifndef Accounts
 	$(error Accounts is undefined)
 endif
 	echo $(Accounts)
-	docker-compose build aws-baseline
+	$(DOCKER_COMPOSE) build aws-baseline
 	$(BASELINE) ./scripts/security-audit -p -r $(SecurityAuditRole) $(Accounts)
 
 clean-reports:
