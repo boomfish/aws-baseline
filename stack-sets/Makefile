@@ -35,6 +35,10 @@ update:
 	@echo ----------- Updating Stack Sets -----------
 	$(call FOR_ALL_DIRS,$(MAKE) update $(StacksetOptions))
 
+template:
+	@echo ----------- Loading templates -----------
+	$(call FOR_ALL_DIRS,formica template -c stack-set.config.yaml --vars MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount))
+
 remove-instances:
 	@echo ----------- Removing StackSet Instances -----------
 	$(call FOR_ALL_DIRS,$(MAKE) remove-instances $(StacksetOptions))

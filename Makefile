@@ -127,6 +127,13 @@ else
 	$(error You must set the StacksetDirs variable to specify which stack sets you wish to destroy)
 endif
 
+stacksets-template:
+ifdef StacksetDirs
+	@cd stack-sets && $(MAKE) template Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) LIST_DIRS=$(LIST_STACKSETDIRS_CMD)
+else
+	@cd stack-sets && $(MAKE) template Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount)
+endif
+
 excluded:
 	@cd main-account-stacks && $(MAKE) excluded -i
 	@cd security-account-stacks && $(MAKE) excluded -i
