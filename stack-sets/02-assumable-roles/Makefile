@@ -17,7 +17,8 @@ add-instances:
 	--regions $(Region) --excluded-accounts $(ExcludedAccounts)
 
 update:
-	formica stack-set update -c stack-set.config.yaml --region $(Region) --yes --regions $(Region) \
+	formica stack-set update -c stack-set.config.yaml --region $(Region) --yes \
+		--regions $(Region) --excluded-accounts $(ExcludedAccounts) \
 		--vars MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) \
 		--tags ValidateRegions=$(Region) ValidateExcludedAccounts="$(ValidateExcludedAccounts)"
 
