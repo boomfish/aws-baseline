@@ -18,10 +18,10 @@ diff:
 		--tags ValidateAccounts=$(SecurityAccount)
 
 add-instances:
-	formica stack-set add-instances -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions) --accounts $(SecurityAccount)
+	formica stack-set add-instances -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions) --accounts $(MainAccount)
 
 update:
-	formica stack-set update -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions) --accounts $(SecurityAccount) \
+	formica stack-set update -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions) --accounts $(MainAccount) \
 		--vars MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) \
 		--tags ValidateAccounts=$(SecurityAccount)
 
@@ -33,7 +33,7 @@ create:
 rollout: create add-instances
 
 remove-instances:
-	formica stack-set remove-instances -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions) --accounts $(SecurityAccount)
+	formica stack-set remove-instances -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions) --accounts $(MainAccount)
 
 remove-stackset:
 	formica stack-set remove -c stack-set.config.yaml --region $(Region)

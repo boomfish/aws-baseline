@@ -14,21 +14,18 @@ endif
 
 diff:
 	formica stack-set diff -c stack-set.config.yaml --region $(Region) \
-		--vars MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) \
-		--tags ValidateExcludedAccounts=$(SecurityAccount)
+		--vars MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount)
 
 add-instances:
-	formica stack-set add-instances -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions) --excluded-accounts $(SecurityAccount)
+	formica stack-set add-instances -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions)
 
 update:
-	formica stack-set update -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions) --excluded-accounts $(SecurityAccount) \
-		--vars MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) \
-		--tags ValidateExcludedAccounts=$(SecurityAccount)
+	formica stack-set update -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions) \
+		--vars MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount)
 
 create:
 	formica stack-set create -c stack-set.config.yaml --region $(Region) \
-		--vars MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) \
-		--tags ValidateExcludedAccounts=$(SecurityAccount)
+		--vars MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount)
 
 rollout: create add-instances
 

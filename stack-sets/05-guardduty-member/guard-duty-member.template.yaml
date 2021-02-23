@@ -9,4 +9,4 @@ Resources:
     Type: "AWS::GuardDuty::Master"
     Properties:
       DetectorId: !Ref GuardDutyDetector
-      MasterId: "{{SecurityAccount}}"
+      MasterId: "{{MainAccount}}"

@@ -4,14 +4,14 @@ Resources:
     Properties:
       Enable: true
 
-  {% set previousAccountId = 0 %}
-  {% for Account in AWSAccounts %}
-  {% if Account['Id'] != SecurityAccount %}
+# FYI: In Jinja2 loops are 1-based but arrays are 0-based,
+#  hence AWSSubAccounts[loop.index-2] gets the previous account
+  {% for Account in AWSSubAccounts %}
   GuardDutyMember{{Account['Id']}}:
     DependsOn:
       - GuardDutyDetector
-      {% if previousAccountId > 0 %}
-      - GuardDutyMember{{previousAccountId}}
+      {% if loop.index > 1 %}
+      - GuardDutyMember{{AWSSubAccounts[loop.index-2]['Id']}}
       {% endif %}
     Type: "AWS::GuardDuty::Member"
     Properties:
@@ -21,6 +21,4 @@ Resources:
       Message: "You are invited to enable Amazon Guardduty."
       DetectorId: !Ref GuardDutyDetector
       DisableEmailNotification: true
-  {% set previousAccountId = Account['Id'] %}
-  {% endif %}
   {% endfor %}

@@ -66,18 +66,18 @@ Resources:
   {% endfor %}
 
   GuardDutyEnabledAndCentralized:
-    Condition: IsNotSecurityAccount
+    Condition: IsSubAccount
     Type: AWS::Config::ConfigRule
     Properties:
       ConfigRuleName: "GUARDDUTY_ENABLED_CENTRALIZED"
       InputParameters:
-        CentralMonitoringAccount: "{{SecurityAccount}}"
+        CentralMonitoringAccount: "{{MainAccount}}"
       Source:
         Owner: AWS
         SourceIdentifier: "GUARDDUTY_ENABLED_CENTRALIZED"
 
   GuardDutyMainAccountEnabled:
-    Condition: IsSecurityAccount
+    Condition: IsMainAccount
     Type: AWS::Config::ConfigRule
     Properties:
       ConfigRuleName: "GUARDDUTY_ENABLED_CENTRALIZED"
