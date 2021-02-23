@@ -30,8 +30,7 @@ create:
 rollout: create add-instances
 
 remove-instances:
-	formica stack-set remove-instances -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions) --excluded-accounts $(SecurityAccount)
-
+	formica stack-set remove-instances -c stack-set.config.yaml --region $(Region) --yes $(InstanceRegions)
 remove-stackset:
 	formica stack-set remove -c stack-set.config.yaml --region $(Region)
 
