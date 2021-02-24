@@ -44,7 +44,7 @@ Resources:
                   - s3:GetObject
                   - s3:PutObject
                 Effect: Allow
-                Resource: !Sub arn:aws:s3:::${RemoteStateBucketPrefix}-${AWS::AccountId}
+                Resource: !Sub arn:aws:s3:::${RemoteStateBucketPrefix}-${AWS::AccountId}/*
     Type: AWS::IAM::Group
 
   TerraformStateAllReadOnly:
@@ -62,6 +62,6 @@ Resources:
               - Action:
                   - s3:GetObject
                 Effect: Allow
-                Resource: !Sub arn:aws:s3:::${RemoteStateBucketPrefix}-${AWS::AccountId}
+                Resource: !Sub arn:aws:s3:::${RemoteStateBucketPrefix}-${AWS::AccountId}/*
     Type: AWS::IAM::Group
 
