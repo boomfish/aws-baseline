@@ -10,4 +10,4 @@ max-concurrent-percentage: 100
 tags:
   ValidateAllAccounts: true
 #  ValidateAllRegions: true
-  ValidateExcludedRegions: eu-north-1
+  ValidateExcludedRegions: ap-northeast-3

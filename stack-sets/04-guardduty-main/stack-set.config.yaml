@@ -5,4 +5,4 @@ main-account: true
 tags:
   ValidateMainAccount: true
 #  ValidateAllRegions: true
-  ValidateExcludedRegions: eu-north-1
+  ValidateExcludedRegions: ap-northeast-3
