@@ -71,3 +71,13 @@ Resources:
       SessionDuration: !Ref SessionDuration
       InlinePolicy: {% include 'policy-statements/operations-access-policy-document.json' %}
     Type: AWS::SSO::PermissionSet
+
+  SupportUserAccess:
+    Properties:
+      InstanceArn: !Ref SSOInstanceArn
+      Name: SupportUserAccess
+      Description: 'Support Users can troubleshoot and resolve issues in an AWS account'
+      SessionDuration: !Ref SessionDuration
+      ManagedPolicies:
+        - arn:aws:iam::aws:policy/job-function/SupportUser
+    Type: AWS::SSO::PermissionSet

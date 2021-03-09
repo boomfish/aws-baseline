@@ -22,6 +22,8 @@ The stack creates the following permission sets:
 
 - `OperationsAccess`: Equivalent to the `AssumableOperationsRole` IAM role in subaccounts
 
+- `SupportUserAccess`: Uses the `SupportUserAccess` AWS job function policy
+
 The maximum duration of `AdminAccess` sessions is controlled by the `AdminSessionDuration` parameter (1 hour by default). The maximum duration of sessions from the other permission sets is controlled by the `SessionDuration` parameter (8 hours by default).
 
 ## Region Restrictions

@@ -42,7 +42,9 @@
       "Action": [
         "organizations:DescribeOrganization",
         "organizations:ListAccounts",
-        "iam:ListAccountAliases"
+        "iam:ListAccountAliases",
+        "iam:ListRoles",
+        "account:ListRegions",
       ],
       "Resource": "*"
     },
@@ -54,7 +56,9 @@
         "ce:*",
         "cur:*",
         "iam:GetRole",
-        "iam:PassRole"
+        "iam:PassRole",
+        "iam:CreateServiceLinkedRole",
+        "iam:DeleteServiceLinkedRole",
       ],
       "Resource": "*"
     }
