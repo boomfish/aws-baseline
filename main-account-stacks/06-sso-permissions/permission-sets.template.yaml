@@ -81,3 +81,18 @@ Resources:
       ManagedPolicies:
         - arn:aws:iam::aws:policy/job-function/SupportUser
     Type: AWS::SSO::PermissionSet
+
+  {% if TerraformPermissionSets %}
+  {% for Account in AWSSubAccounts %}
+  {% if Account['Id'] != SecurityAccount %}
+  Terraformer{{Account['Id']}}:
+    Type: AWS::SSO::PermissionSet
+    Properties:
+      InstanceArn: !Ref SSOInstanceArn
+      Name: Terraform{{Account['Name'] | resource}}
+      Description: "Apply Terraforms in the {{Account['Name']}} account"
+      SessionDuration: !Ref SessionDuration
+      InlinePolicy: {% include 'policy-statements/terraformer-policy-document.json' %}
+  {% endif %}
+  {% endfor %}
+  {% endif %}

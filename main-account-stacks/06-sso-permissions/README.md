@@ -26,6 +26,16 @@ The stack creates the following permission sets:
 
 The maximum duration of `AdminAccess` sessions is controlled by the `AdminSessionDuration` parameter (1 hour by default). The maximum duration of sessions from the other permission sets is controlled by the `SessionDuration` parameter (8 hours by default).
 
+## Terraform support
+
+If the `TerraformPermissionSets` variable is enabled in `stack.config.yaml`, then the stack also generates a `Terraformer` permission set for each subaccount. For this to work the following variables must also be set:
+
+- `TerraformRemoteStateBucketPrefix`: Must be set to the same value as the `RemoteStateBucketPrefix` parameter in the `terraform-state` Security account stack
+
+- `TerraformLockingTablePrefix`: Must be set to the same value as the `LockingTablePrefix` parameter in the `terraform-state` Security account stack
+
+- `TerraformLockingTableRegion`: Must be set to the region used for the Security account stacks
+
 ## Region Restrictions
 
 The `DeveloperAccess` permission set can be restricted to specific regions by setting the `AllowedRegions` variable. The value is a comma-separated list of region names. If it is not set, the permission set is not restricted by region.
