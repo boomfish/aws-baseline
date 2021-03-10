@@ -5,14 +5,14 @@
       "Sid": "ViewLogs",
       "Effect": "Allow",
       "Action": [
-          "cloudwatch:Describe*",
-          "cloudwatch:Get*",
-          "cloudwatch:List*",
-          "logs:Describe*",
-          "logs:Get*",
-          "logs:List*",
-          "logs:FilterLogEvents",
-          "logs:StartQuery"
+        "cloudwatch:Describe*",
+        "cloudwatch:Get*",
+        "cloudwatch:List*",
+        "logs:Describe*",
+        "logs:Get*",
+        "logs:List*",
+        "logs:FilterLogEvents",
+        "logs:StartQuery"
       ],
       "Resource": "*"
     }

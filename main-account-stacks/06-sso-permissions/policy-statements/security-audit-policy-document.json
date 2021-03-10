@@ -5,8 +5,8 @@
       "Sid": "AdditionalAuditChecks",
       "Effect": "Allow",
       "Action": [
-          "support:DescribeTrustedAdvisorChecks",
-          "sns:ListSubscriptions"
+        "support:DescribeTrustedAdvisorChecks",
+        "sns:ListSubscriptions"
       ],
       "Resource": "*"
     }
