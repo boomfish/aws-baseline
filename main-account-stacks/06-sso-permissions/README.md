@@ -32,7 +32,7 @@ If the `TerraformPermissionSets` variable is enabled in `stack.config.yaml`, the
 
 - `TerraformRemoteStateBucketPrefix`: Must be set to the same value as the `RemoteStateBucketPrefix` parameter in the `terraform-state` Security account stack
 
-- `TerraformLockingTablePrefix`: Must be set to the same value as the `LockingTablePrefix` parameter in the `terraform-state` Security account stack
+- `TerraformLockingTableName`: Must be set to the same value as the `LockingTableName` parameter in the `terraform-state` Security account stack
 
 - `TerraformLockingTableRegion`: Must be set to the region used for the Security account stacks
 

@@ -2,7 +2,7 @@ Parameters:
   RemoteStateBucketPrefix:
     Type: String
     Default: 'terraform-state'
-  LockingTablePrefix:
+  LockingTableName:
     Type: String
     Default: 'terraform-locks'
 
@@ -20,7 +20,7 @@ Resources:
   LockingTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub ${LockingTablePrefix}-${AWS::AccountId}
+      TableName: !Sub ${LockingTableName}
       BillingMode: PROVISIONED
       ProvisionedThroughput:
         ReadCapacityUnits: 1

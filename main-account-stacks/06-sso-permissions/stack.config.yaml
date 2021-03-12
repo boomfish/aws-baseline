@@ -3,7 +3,7 @@ stack: sso-permissions
 #  AllowedRegions: us-east-1
 #  TerraformPermissionSets: true
 #  TerraformRemoteStateBucketPrefix: terraform-state
-#  TerraformLockingTablePrefix: terraform-locks
+#  TerraformLockingTableName: terraform-locks
 #  TerraformLockingTableRegion: us-east-1
 parameters:
   SSOInstanceArn: arn:aws:sso:::instance/ssoins-XXXXXXXXXXXXXXXX

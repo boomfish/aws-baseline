@@ -34,7 +34,7 @@
         "dynamodb:PutItem",
         "dynamodb:DeleteItem"
       ],
-      "Resource": "arn:aws:dynamodb:{{TerraformLockingTableRegion}}:{{SecurityAccount}}:table/{{TerraformLockingTablePrefix}}-{{SecurityAccount}}"
+      "Resource": "arn:aws:dynamodb:{{TerraformLockingTableRegion}}:{{SecurityAccount}}:table/{{TerraformLockingTableName}}"
     }
   ]
 }
