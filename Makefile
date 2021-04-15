@@ -85,7 +85,11 @@ stacksets-rollout:
 ifneq ($(thisAccount),$(MainAccount))
 	$(error You must use admin credentials for account ID $(MainAccount) to roll out the main stacks and stacksets)
 endif
+ifdef StacksetDirs
+	@cd stack-sets && $(MAKE) rollout Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(SingleRegionOption) LIST_DIRS=$(LIST_STACKSETDIRS_CMD)
+else
 	@cd stack-sets && $(MAKE) rollout Region=$(Region) MainAccount=$(MainAccount) SecurityAccount=$(SecurityAccount) LoggingAccount=$(LoggingAccount) $(SingleRegionOption)
+endif
 
 security-rollout:
 ifneq ($(thisAccount),$(SecurityAccount))
