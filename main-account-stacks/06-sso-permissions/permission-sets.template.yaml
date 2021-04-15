@@ -82,6 +82,16 @@ Resources:
         - arn:aws:iam::aws:policy/job-function/SupportUser
     Type: AWS::SSO::PermissionSet
 
+  ViewOnlyAccess:
+    Properties:
+      InstanceArn: !Ref SSOInstanceArn
+      Name: ViewOnlyAccess
+      Description: 'View resources and basic metadata across all AWS services'
+      SessionDuration: !Ref SessionDuration
+      ManagedPolicies:
+        - arn:aws:iam::aws:policy/job-function/ViewOnlyAccess
+    Type: AWS::SSO::PermissionSet
+
   {% if TerraformPermissionSets %}
   {% for Account in AWSSubAccounts %}
   {% if Account['Id'] != SecurityAccount %}
