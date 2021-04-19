@@ -27,13 +27,22 @@
       "Resource": "arn:aws:s3:::{{TerraformRemoteStateBucketPrefix}}-{{SecurityAccount}}/*"
     },
     {
+      "Sid": "ListKeys",
+      "Effect": "Allow",
+      "Action": [
+        "kms:ListKeys",
+        "kms:ListAliases"
+      ],
+      "Resource": "*"
+    },
+    {
       "Sid": "DecryptEncryptRemoteState",
       "Effect": "Allow",
       "Action": [
-        "kms:List*",
-        "kms:Describe*",
+        "kms:DescribeKey",
         "kms:Decrypt",
-        "kms:Encrypt"
+        "kms:Encrypt",
+        "kms:GenerateDataKey"
       ],
       "Resource": "arn:aws:kms:*:{{SecurityAccount}}:key/*",
       "Condition": {
