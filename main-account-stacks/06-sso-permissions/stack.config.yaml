@@ -5,6 +5,7 @@ stack: sso-permissions
 #  TerraformRemoteStateBucketPrefix: terraform-state
 #  TerraformLockingTableName: terraform-locks
 #  TerraformLockingTableRegion: us-east-1
+#  TerraformEncryptionAliasName: terraform
 parameters:
   SSOInstanceArn: arn:aws:sso:::instance/ssoins-XXXXXXXXXXXXXXXX
 create-missing: true

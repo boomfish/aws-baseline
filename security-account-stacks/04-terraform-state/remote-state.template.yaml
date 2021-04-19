@@ -2,15 +2,43 @@ Parameters:
   RemoteStateBucketPrefix:
     Type: String
     Default: 'terraform-state'
+  RemoteStateBucketVersioningStatus:
+    Type: String
+    Default: Enabled
+  RemoteStateEncryptionAliasName:
+    Type: String
+    Default: 'terraform'
   LockingTableName:
     Type: String
     Default: 'terraform-locks'
 
 Resources:
+
+  RemoteStateEncryptionKey:
+    Type: AWS::KMS::Key
+    Properties: 
+      Description: Terraform remote state encryption
+      KeyPolicy: {% include 'policy-statements/terraform-key-policy-document.json' %}
+      PendingWindowInDays: 30
+
+  RemoteStateEncryptionAlias:
+    Type: AWS::KMS::Alias
+    Properties: 
+      AliasName: !Sub alias/${RemoteStateEncryptionAliasName}
+      TargetKeyId: !GetAtt RemoteStateEncryptionKey.Arn
+
   RemoteStateBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub ${RemoteStateBucketPrefix}-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !GetAtt RemoteStateEncryptionKey.Arn
+            BucketKeyEnabled: true
+      VersioningConfiguration:
+        Status: !Sub ${RemoteStateBucketVersioningStatus}
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true

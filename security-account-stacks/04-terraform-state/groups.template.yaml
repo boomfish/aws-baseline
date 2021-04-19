@@ -45,6 +45,21 @@ Resources:
                   - s3:PutObject
                 Effect: Allow
                 Resource: !Sub arn:aws:s3:::${RemoteStateBucketPrefix}-${AWS::AccountId}/*
+        - PolicyName: TerraformDecryptEncryptState
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Action:
+                  - kms:List*
+                  - kms:Describe*
+                  - kms:Decrypt
+                  - kms:Encrypt
+                Effect: Allow
+                Resource: !Sub arn:aws:kms:*:${AWS::AccountId}:key/*
+                Condition:
+                  ForAnyValue:StringEquals:
+                    kms:ResourceAliases:
+                      - !Sub alias/${RemoteStateEncryptionAliasName}
     Type: AWS::IAM::Group
 
   TerraformStateAllReadOnly:
@@ -63,5 +78,19 @@ Resources:
                   - s3:GetObject
                 Effect: Allow
                 Resource: !Sub arn:aws:s3:::${RemoteStateBucketPrefix}-${AWS::AccountId}/*
+        - PolicyName: TerraformDecryptState
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Action:
+                  - kms:List*
+                  - kms:Describe*
+                  - kms:Decrypt
+                Effect: Allow
+                Resource: !Sub arn:aws:kms:*:${AWS::AccountId}:key/*
+                Condition:
+                  ForAnyValue:StringEquals:
+                    kms:ResourceAliases:
+                      - !Sub alias/${RemoteStateEncryptionAliasName}
     Type: AWS::IAM::Group
 

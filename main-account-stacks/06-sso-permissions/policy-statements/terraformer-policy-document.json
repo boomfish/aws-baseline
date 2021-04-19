@@ -27,6 +27,24 @@
       "Resource": "arn:aws:s3:::{{TerraformRemoteStateBucketPrefix}}-{{SecurityAccount}}/*"
     },
     {
+      "Sid": "DecryptEncryptRemoteState",
+      "Effect": "Allow",
+      "Action": [
+        "kms:List*",
+        "kms:Describe*",
+        "kms:Decrypt",
+        "kms:Encrypt"
+      ],
+      "Resource": "arn:aws:kms:*:{{SecurityAccount}}:key/*",
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "kms:ResourceAliases": [
+            "alias/{{TerraformEncryptionAliasName}}"
+          ]
+        }
+      }
+    },
+    {
       "Sid": "TerraformLocking",
       "Effect": "Allow",
       "Action": [
