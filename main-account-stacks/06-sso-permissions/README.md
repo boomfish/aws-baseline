@@ -40,6 +40,14 @@ If the `TerraformPermissionSets` variable is enabled in `stack.config.yaml`, the
 
 The `DeveloperAccess` permission set can be restricted to specific regions by setting the `AllowedRegions` variable. The value is a comma-separated list of region names. If it is not set, the permission set is not restricted by region.
 
+## Extending IAM access for Developers
+
+The `DeveloperAccess` permission set has very limited access to IAM actions by default.
+
+To add access to IAM views to this permission set, set the `AllowDevsIAMViews` variable to any value.
+
+To add access to create, edit, and delete IAM roles and policies, set the `AllowDevsIAMLimitedAdmin` variable to any value. Even with this setting, the permission set is restricted to creating roles with the `CreatedIdentitiesPermissionsBoundary` boundary policy and is not allowed to edit boundary policies or baseline roles.
+
 ## Limitations of SSO Permission Sets
 
 There are some limitations of SSO permission sets compared with IAM group and role policies:

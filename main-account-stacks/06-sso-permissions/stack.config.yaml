@@ -6,6 +6,8 @@ stack: sso-permissions
 #  TerraformLockingTableName: terraform-locks
 #  TerraformLockingTableRegion: us-east-1
 #  TerraformEncryptionAliasName: terraform
+#  AllowDevsIAMViews: true
+#  AllowDevsIAMLimitedAdmin: true
 parameters:
   SSOInstanceArn: arn:aws:sso:::instance/ssoins-XXXXXXXXXXXXXXXX
 create-missing: true

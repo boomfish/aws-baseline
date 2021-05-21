@@ -57,10 +57,89 @@
         "cur:*",
         "iam:GetRole",
         "iam:PassRole",
-        "iam:CreateServiceLinkedRole",
-        "iam:DeleteServiceLinkedRole",
       ],
       "Resource": "*"
+    },
+{% if AllowDevsIAMViews %}
+    {
+      "Sid": "ViewGroupsUsers",
+      "Effect": "Allow",
+      "Action": [
+        "iam:GetAccountSummary",
+        "iam:GetUser",
+        "iam:GetPolicy",
+        "iam:GetGroup",
+        "iam:ListGroups",
+        "iam:ListUsers",
+        "iam:ListPolicies",
+        "iam:ListGroupPolicies",
+        "iam:ListUserPolicies",
+        "iam:ListGroupsForUser",
+        "iam:ListUserTags",
+        "iam:ListAttachedUserPolicies",
+        "iam:ListAttachedGroupPolicies",
+      ],
+      "Resource": "*"
+    },
+{% endif %}
+{% if AllowDevsIAMLimitedAdmin %}
+    {
+      "Sid": "CreateOrChangeRolesOnlyWithBoundary",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole",
+        "iam:DeleteRolePolicy",
+        "iam:AttachRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:PutRolePolicy",
+        "iam:PutRolePermissionsBoundary",
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringLike": {
+          "iam:PermissionsBoundary": "arn:aws:iam::*:policy/CreatedIdentitiesPermissionsBoundary"
+        }
+      }
+    },
+    {
+      "Sid": "AllowedIAMActionsAgainstAnyResource",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateServiceLinkedRole",
+        "iam:DeleteServiceLinkedRole",
+        "iam:CreatePolicy",
+        "iam:DeletePolicy",
+        "iam:ListPolicyVersions",
+        "iam:CreatePolicyVersion",
+        "iam:DeletePolicyVersion",
+        "iam:DeleteRole"
+      ],
+      "Resource": "*"
+    },
+{% endif %}
+    {
+      "Sid": "NoBoundaryPolicyEdit",
+      "Effect": "Deny",
+      "Action": [
+        "iam:CreatePolicyVersion",
+        "iam:DeletePolicy",
+        "iam:DeletePolicyVersion",
+        "iam:SetDefaultPolicyVersion"
+      ],
+      "Resource": [
+          "arn:aws:iam::*:policy/boundaries/*"
+      ]
+    },
+    {
+      "Sid": "NoModifyOnAssumableRoles",
+      "Effect": "Deny",
+      "NotAction": [
+        "iam:GetRole"
+      ],
+      "Resource": [
+        "arn:aws:iam::*:role/AWSCloudFormationStackSet*",
+        "arn:aws:iam::*:role/Assumable*"
+      ]
     }
   ]
 }
