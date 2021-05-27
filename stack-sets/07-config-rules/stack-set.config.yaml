@@ -18,5 +18,5 @@ capabilities:
   - CAPABILITY_IAM
 tags:
   ValidateAllAccounts: true
-#  ValidateAllRegions: true
-  ValidateExcludedRegions: ap-northeast-3
+  ValidateAllRegions: true
+#  ValidateExcludedRegions: ap-northeast-3

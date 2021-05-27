@@ -8,8 +8,8 @@ Region=us-east-1
 ifdef SingleRegion
 InstanceRegions=--regions $(Region)
 else
-#InstanceRegions--all-regions
-InstanceRegions=--excluded-regions ap-northeast-3
+InstanceRegions=--all-regions
+#InstanceRegions=--excluded-regions ap-northeast-3
 endif
 
 diff:
