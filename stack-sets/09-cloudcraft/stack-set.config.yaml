@@ -1,0 +1,10 @@
+stack-set: cloudcraft
+all-accounts: true
+max-concurrent-percentage: 100
+capabilities:
+  - CAPABILITY_NAMED_IAM
+vars:
+  CloudcraftAccount: 968898580625
+  CloudcraftExternalId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+tags:
+  ValidateAllAccounts: true

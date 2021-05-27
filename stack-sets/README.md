@@ -15,6 +15,7 @@ Following a short summary for each StackSet. For individual documentation on eac
 * `06-auditing-configuration`: CloudTrail and Config configuration including writing to S3 Bucket in main accont
 * `07-config-rules`: Default Config Rules and Rule to find Resources in unused regions
 * `08-vpc`: Flexible VPC configuration
+* `09-cloudcraft`: Cloudcraft role to visualize your live AWS resources
 
 
 ## Individual Updates

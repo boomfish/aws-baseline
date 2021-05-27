@@ -1,0 +1,83 @@
+Parameters:
+  ExportPrefix:
+    Type: String
+    Default: 'cloudcraft'
+
+Resources:
+
+  # https://help.cloudcraft.co/article/64-minimal-iam-policy
+  CloudcraftPolicy:
+    Properties:
+      ManagedPolicyName: Cloudcraft
+      Description: Cloudcraft Custom Policy Version 2021-05-19
+      Path: /cloudcraft/
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - apigateway:Get
+              - autoscaling:Describe*
+              - cloudfront:Get*
+              - cloudfront:List*
+              - cloudwatch:Describe*
+              - cloudwatch:Get*
+              - cloudwatch:List*
+              - dynamodb:DescribeTable
+              - dynamodb:ListTables
+              - dynamodb:ListTagsOfResource
+              - ec2:Describe*
+              - ecr:Describe*
+              - ecr:List*
+              - ecs:Describe*
+              - ecs:List*
+              - eks:Describe*
+              - eks:List*
+              - elasticache:Describe*
+              - elasticache:List*
+              - elasticfilesystem:Describe*
+              - elasticloadbalancing:Describe*
+              - es:Describe*
+              - es:List*
+              - fsx:Describe*
+              - fsx:List*
+              - kinesis:Describe*
+              - kinesis:List*
+              - lambda:List*
+              - rds:Describe*
+              - rds:ListTagsForResource
+              - redshift:Describe*
+              - route53:Get*
+              - route53:List*
+              - s3:GetBucketAcl
+              - s3:GetBucketLocation
+              - s3:GetBucketNotification
+              - s3:GetBucketTagging
+              - s3:GetEncryptionConfiguration
+              - s3:List*
+              - ses:Get*
+              - ses:List*
+              - sns:GetTopicAttributes
+              - sns:List*
+              - sqs:GetQueueAttributes
+              - sqs:ListQueues
+              - sqs:ListQueueTags
+              - tag:Get*
+              - wafv2:GetWebACL*
+              - wafv2:List
+            Resource: '*'
+            Effect: Allow
+    Type: AWS::IAM::ManagedPolicy
+
+  CloudcraftRole:
+    Properties:
+      AssumeRolePolicyDocument: {% include 'policy-statements/assumable-role-policy-document.json'%}
+      ManagedPolicyArns:
+        - !Ref CloudcraftPolicy
+      RoleName: cloudcraft
+    Type: AWS::IAM::Role
+
+Outputs:
+  CloudcraftRoleArn:
+    Value: !Ref CloudcraftRole
+    Export:
+      Name: !Sub ${ExportPrefix}:CloudcraftRoleArn
