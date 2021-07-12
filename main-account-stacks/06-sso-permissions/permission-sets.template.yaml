@@ -39,6 +39,7 @@ Resources:
       Description: 'View bills and budgets and use the Cost Explorer'
       SessionDuration: !Ref SessionDuration
       InlinePolicy: {% include 'policy-statements/billing-read-access-policy-document.json' %}
+      RelayStateType: https://console.aws.amazon.com/billing/home
     Type: AWS::SSO::PermissionSet
 
   LoggingReadAccess:
