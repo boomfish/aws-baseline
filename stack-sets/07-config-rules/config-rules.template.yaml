@@ -3,6 +3,7 @@ Mappings:
     {% for Region in AWSRegions %}
     {{Region}}:
       Enabled: {% if Region in EnabledRegions %}true{%else%}false{%endif%}
+      GuardDutyCapable: {% if Region == 'ap-northeast-3' %}false{%else%}true{%endif%}
     {% endfor %}
 
 Parameters:
@@ -31,6 +32,14 @@ Conditions:
     Fn::And:
       - !Equals [!Ref 'AWS::AccountId', '{{SecurityAccount}}']
       - !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion]
+  IsMainAccountGuardDutyRegion:
+    Fn::And:
+      - !Equals [!Ref 'AWS::AccountId', !Ref MainAccount]
+      - !Equals [!FindInMap ['RegionMap', !Ref 'AWS::Region', 'GuardDutyCapable'], 'true']
+  IsSubAccountGuardDutyRegion:
+    Fn::And:
+      - !Not [!Equals [!Ref 'AWS::AccountId', !Ref MainAccount]]
+      - !Equals [!FindInMap ['RegionMap', !Ref 'AWS::Region', 'GuardDutyCapable'], 'true']
 
 Resources:
   {% for Rule, Resource in EnabledConfigRules.items() %}
@@ -66,7 +75,7 @@ Resources:
   {% endfor %}
 
   GuardDutyEnabledAndCentralized:
-    Condition: IsSubAccount
+    Condition: IsSubAccountGuardDutyRegion
     Type: AWS::Config::ConfigRule
     Properties:
       ConfigRuleName: "GUARDDUTY_ENABLED_CENTRALIZED"
@@ -77,7 +86,7 @@ Resources:
         SourceIdentifier: "GUARDDUTY_ENABLED_CENTRALIZED"
 
   GuardDutyMainAccountEnabled:
-    Condition: IsMainAccount
+    Condition: IsMainAccountGuardDutyRegion
     Type: AWS::Config::ConfigRule
     Properties:
       ConfigRuleName: "GUARDDUTY_ENABLED_CENTRALIZED"
